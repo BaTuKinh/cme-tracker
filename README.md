@@ -11,7 +11,7 @@ Công cụ web để lưu thông tin, chứng nhận CME và tự tính giờ t�
 - Tự cộng giờ tín chỉ trong chu kỳ, báo còn thiếu, số ngày còn lại, mức cần học mỗi tháng và phân bổ theo từng năm.
 - Đính kèm bản scan chứng nhận (PDF/ảnh, tối đa 8 MB mỗi file).
 - Xuất **Excel (.xlsx)** gồm 3 sheet: `Hoạt động` (đầy đủ danh sách, có bộ lọc, giờ tín chỉ là công thức, dòng tổng trong chu kỳ), `Tổng hợp` (hồ sơ, chu kỳ, giờ tích lũy, còn thiếu) và `Hệ số quy đổi`.
-- Xuất CSV, và xuất/nhập sao lưu JSON (kèm file scan) để chuyển sang thiết bị khác.
+- Xuất CSV, và xuất/nhập sao lưu JSON (kèm file scan) để chuyển sang thiết bị khác, có **chế độ gộp dữ liệu** để dùng cả máy tính lẫn điện thoại.
 - **Cài như ứng dụng và dùng khi mất mạng** (PWA): thêm vào màn hình chính điện thoại hoặc cài trên máy tính; sau lần mở đầu tiên có mạng, vẫn xem, nhập và xuất dữ liệu được khi ngoại tuyến.
 - Có sẵn khối **Lưu ý quan trọng**, **Hướng dẫn sử dụng**, thanh điều hướng nhanh và **cảnh báo nhắc sao lưu** (khi chưa từng sao lưu hoặc quá 30 ngày).
 
@@ -80,7 +80,27 @@ Vào mục **Sao lưu & khôi phục**:
 
 - **Xuất Excel (.xlsx):** lấy toàn bộ danh sách và tổng hợp để lưu, in hoặc nộp hồ sơ. File Excel không kèm ảnh scan.
 - **Xuất bảng (CSV):** bản bảng tính đơn giản.
-- **Xuất sao lưu (JSON):** đầy đủ dữ liệu kèm file scan, dùng để chuyển sang máy khác hoặc phòng khi mất dữ liệu trình duyệt. Dùng **Nhập sao lưu…** để khôi phục.
+- **Xuất sao lưu (JSON):** đầy đủ dữ liệu kèm file scan, dùng để chuyển sang máy khác hoặc phòng khi mất dữ liệu trình duyệt.
+- **Nhập & gộp dữ liệu (khuyên dùng):** thêm hoạt động mới từ file sao lưu vào máy này mà không làm mất dữ liệu đang có.
+- **Nhập & ghi đè:** thay hoàn toàn dữ liệu máy này bằng file sao lưu (dùng khi khôi phục máy mới hoặc muốn hai máy giống hệt nhau).
+
+#### Dùng cả máy tính và điện thoại
+
+Mỗi thiết bị giữ dữ liệu riêng, nên chuyển qua lại bằng sao lưu:
+
+1. Ở máy A: **Xuất sao lưu (JSON)**, gửi file sang máy B (Zalo, email, Google Drive…).
+2. Ở máy B: **Nhập & gộp dữ liệu** và chọn file đó. Làm tương tự theo chiều ngược lại khi cần.
+
+Cách gộp hoạt động như sau:
+
+- Hoạt động chỉ có ở một máy sẽ được thêm vào.
+- Hoạt động có ở cả hai máy nhưng đã được sửa: giữ bản **sửa sau cùng** (so theo giờ trên thiết bị, nên để đồng hồ hai máy đúng).
+- Hoạt động đã **xóa ở máy kia** sẽ bị xóa ở máy này, trừ khi bạn đã sửa lại sau thời điểm xóa.
+- Hoạt động trùng nội dung (cùng ngày, cùng tên, cùng số lượng) nhưng nhập riêng ở hai máy sẽ chỉ giữ một bản, nên bản scan đính kèm của mục bị bỏ qua sẽ không được thêm vào.
+- **Hồ sơ và hệ số quy đổi giữ theo máy nhận**, chỉ điền vào chỗ còn trống. Muốn đổi hệ số hoặc ngày chu kỳ, hãy sửa ở từng máy.
+- Gộp xong, app báo số hoạt động đã thêm, cập nhật, xóa và bỏ qua.
+
+Trước khi gộp lần đầu, nên **xuất sao lưu máy nhận** để có bản dự phòng.
 
 Nên xuất sao lưu JSON định kỳ (ví dụ mỗi lần thêm vài chứng nhận mới) và cất ở nơi an toàn như Google Drive.
 
@@ -99,7 +119,8 @@ Dữ liệu của bạn nằm trong trình duyệt nên **không bị mất** kh
 | Tình huống | Cách xử lý |
 |---|---|
 | Mở địa chỉ báo 404 | Kiểm tra `index.html` nằm ở thư mục gốc của repository và Pages đã bật ở Bước 3; chờ vài phút. |
-| Mở trên máy khác không thấy dữ liệu | Dữ liệu chỉ nằm trên trình duyệt đã nhập. Xuất sao lưu JSON ở máy cũ rồi nhập vào máy mới. |
+| Mở trên máy khác không thấy dữ liệu | Dữ liệu chỉ nằm trên trình duyệt đã nhập. Xuất sao lưu JSON ở máy cũ rồi dùng **Nhập & gộp dữ liệu** (hoặc Nhập & ghi đè nếu máy mới còn trống) ở máy mới. |
+| Gộp xong thiếu một hoạt động | Có thể nó đã bị xóa ở máy kia, hoặc bị coi là trùng nội dung với mục đã có (cùng ngày, tên, số lượng). Kiểm tra thông báo kết quả gộp và nhập lại nếu cần. |
 | Mất dữ liệu sau khi xóa lịch sử trình duyệt | Nhập lại từ file sao lưu JSON gần nhất. |
 | Không xem được file scan | Trình duyệt có thể chặn cửa sổ bật lên; cho phép pop-up cho trang này. |
 | Dùng chế độ ẩn danh | Dữ liệu bị xóa khi đóng cửa sổ; hãy dùng cửa sổ thường. |

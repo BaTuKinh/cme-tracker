@@ -122,6 +122,12 @@ details.card h3{font-size:14px;margin:14px 0 6px}
       <li><b>Máy tính (Chrome, Edge):</b> bấm biểu tượng cài đặt ở thanh địa chỉ.</li>
       <li>Hãy mở app <b>một lần khi có mạng</b> để tải về máy. Sau đó vẫn xem, nhập và xuất dữ liệu được khi không có Internet. Khi có mạng, app tự lấy bản mới.</li>
     </ul>
+    <h3>Dùng cả máy tính và điện thoại</h3>
+    <ul>
+      <li>Mỗi thiết bị giữ dữ liệu riêng. Để chuyển qua lại: xuất <b>sao lưu JSON</b> ở máy này (gửi qua Zalo, email hoặc Google Drive), rồi ở máy kia bấm <b>Nhập &amp; gộp dữ liệu</b>.</li>
+      <li>Gộp giữ lại hoạt động mới ở cả hai máy, lấy bản sửa mới hơn, áp dụng việc xóa và bỏ qua mục trùng. Hồ sơ và hệ số vẫn theo máy nhận. Hai máy nên để đúng giờ để so sánh “mới hơn” chính xác.</li>
+      <li>Chỉ dùng <b>Nhập &amp; ghi đè</b> khi muốn máy này giống hệt file sao lưu.</li>
+    </ul>
   </details>
 
   <details class="card" id="profile">
@@ -184,11 +190,13 @@ details.card h3{font-size:14px;margin:14px 0 6px}
       <button id="exJson">Xuất sao lưu (JSON, kèm file scan)</button>
       <button id="exXlsx" class="pri">Xuất Excel (.xlsx)</button>
       <button id="exCsv">Xuất bảng (CSV)</button>
-      <button id="imBtn">Nhập sao lưu…</button>
+      <button id="imMerge">Nhập &amp; gộp dữ liệu (khuyên dùng)</button>
+      <button id="imReplace">Nhập &amp; ghi đè</button>
       <input id="imFile" type="file" accept="application/json" class="hide">
       <button id="wipe" class="del">Xóa toàn bộ dữ liệu</button>
     </div>
     <div class="hint">Dữ liệu nằm trong trình duyệt/thiết bị này. Xóa dữ liệu trình duyệt sẽ mất dữ liệu – hãy xuất sao lưu định kỳ. Trên iPhone/iPad, dữ liệu trong app đã cài và trong Safari có thể là hai kho riêng, nên hãy chọn một nơi dùng cố định.</div>
+    <div class="hint"><b>Dùng cả máy tính và điện thoại:</b> xuất sao lưu JSON ở máy này, rồi bấm “Nhập &amp; gộp dữ liệu” ở máy kia (và ngược lại). Gộp sẽ thêm hoạt động mới, giữ bản sửa mới hơn, áp dụng cả việc xóa, bỏ qua mục trùng. “Ghi đè” thì thay hoàn toàn dữ liệu của máy này.</div>
     <div class="hint" id="bkLast"></div>
   </div>
   <footer>
@@ -214,8 +222,8 @@ const DEF_TYPES=[
 ];
 let state=load(), editId=null, q='';
 function load(){
-  try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&Array.isArray(s.items)){s.meta=s.meta||{};return s}}catch(e){}
-  return{profile:{name:'',license:'',cycleStart:'',required:120},types:DEF_TYPES.map(t=>({...t})),items:[],meta:{lastBackup:null}};
+  try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&Array.isArray(s.items)){s.meta=s.meta||{};s.deleted=s.deleted||{};return s}}catch(e){}
+  return{profile:{name:'',license:'',cycleStart:'',required:120},types:DEF_TYPES.map(t=>({...t})),items:[],deleted:{},meta:{lastBackup:null}};
 }
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){alert('Không lưu được dữ liệu: '+e.message)}}
 
@@ -308,7 +316,7 @@ $('#f').onsubmit=async e=>{
   const amount=Number($('#fAmt').value)||0,factor=Number($('#fFac').value)||0;
   const it={id:old?old.id:uid(),date:$('#fDate').value,title:$('#fTitle').value.trim(),org:$('#fOrg').value.trim(),orgCode:$('#fCode').value.trim(),
     typeId:$('#fType').value,amount,factor,credits:Math.round(amount*factor*100)/100,certNo:$('#fCert').value.trim(),note:$('#fNote').value.trim(),
-    fileId:old?old.fileId:null,fileName:old?old.fileName:null};
+    fileId:old?old.fileId:null,fileName:old?old.fileName:null,updatedAt:Date.now()};
   try{
     if(file){if(it.fileId)await fdel(it.fileId);it.fileId=uid();it.fileName=file.name;await fput({id:it.fileId,name:file.name,type:file.type,blob:file})}
   }catch(err){alert('Không lưu được file đính kèm: '+err.message)}
@@ -321,7 +329,7 @@ $('#tb').onclick=async e=>{
   if(b.dataset.act==='del'){
     if(!confirm('Xóa hoạt động "'+it.title+'"?'))return;
     if(it.fileId)try{await fdel(it.fileId)}catch(_){}
-    state.items=state.items.filter(i=>i!==it);save();renderDash();renderTable();renderBk();
+    state.items=state.items.filter(i=>i!==it);state.deleted=state.deleted||{};state.deleted[it.id]=Date.now();save();renderDash();renderTable();renderBk();
   }else if(b.dataset.act==='edit'){
     editId=it.id;$('#fDate').value=it.date;$('#fTitle').value=it.title;$('#fOrg').value=it.org;$('#fCode').value=it.orgCode;
     $('#fType').value=it.typeId;$('#fAmt').value=it.amount;$('#fFac').value=it.factor;$('#fCert').value=it.certNo;$('#fNote').value=it.note;
@@ -457,18 +465,64 @@ $('#exCsv').onclick=()=>{
   const rows=state.items.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(i=>[i.date,i.title,i.org,i.orgCode,tn(i.typeId),i.amount,i.factor,i.credits,i.certNo,i.note]);
   download('cme.csv',new Blob(['\ufeff'+[head,...rows].map(r=>r.map(cell).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'}));
 };
-$('#imBtn').onclick=()=>$('#imFile').click();
+/* MERGE-START */
+const normKey=i=>[i.date,String(i.title||'').trim().toLowerCase(),Number(i.amount)||0].join('|');
+function mergeStates(L,R){
+  const st=JSON.parse(JSON.stringify(L));
+  st.deleted=Object.assign({},L.deleted||{});
+  st.meta=st.meta||{};
+  const stats={added:0,updated:0,removed:0,dup:0,kept:0};
+  for(const [id,t] of Object.entries(R.deleted||{}))st.deleted[id]=Math.max(st.deleted[id]||0,Number(t)||0);
+  const byId=new Map(st.items.map(i=>[i.id,i]));
+  const keys=new Set(st.items.map(normKey));
+  for(const r of R.items||[]){
+    const l=byId.get(r.id),ts=Number(r.updatedAt)||0;
+    if(l){
+      if(ts>(Number(l.updatedAt)||0)){Object.assign(l,r);stats.updated++}else stats.kept++;
+    }else{
+      const del=st.deleted[r.id];
+      if(del&&del>=ts)continue;
+      if(keys.has(normKey(r))){stats.dup++;continue}
+      const c=Object.assign({},r);st.items.push(c);byId.set(c.id,c);keys.add(normKey(c));stats.added++;
+    }
+  }
+  st.items=st.items.filter(i=>{const del=st.deleted[i.id];if(del&&del>=(Number(i.updatedAt)||0)){stats.removed++;return false}return true});
+  for(const i of st.items){if(st.deleted[i.id]&&st.deleted[i.id]<(Number(i.updatedAt)||0))delete st.deleted[i.id]}
+  st.profile=Object.assign({},L.profile);
+  for(const k of ['name','license','cycleStart'])if(!st.profile[k]&&R.profile&&R.profile[k])st.profile[k]=R.profile[k];
+  const tid=new Set((st.types||[]).map(t=>t.id));st.types=st.types||[];
+  for(const t of R.types||[])if(!tid.has(t.id))st.types.push(Object.assign({},t));
+  return{state:st,stats};
+}
+/* MERGE-END */
+let impMode='merge';
+$('#imMerge').onclick=()=>{impMode='merge';$('#imFile').click()};
+$('#imReplace').onclick=()=>{impMode='replace';$('#imFile').click()};
 $('#imFile').onchange=async e=>{
-  const f=e.target.files[0];if(!f)return;
+  const f=e.target.files[0];e.target.value='';if(!f)return;
   try{
     const d=JSON.parse(await f.text());
     if(!d.state||!Array.isArray(d.state.items))throw new Error('File sao lưu không hợp lệ');
-    if(!confirm('Nhập sao lưu sẽ GHI ĐÈ dữ liệu hiện tại. Tiếp tục?'))return;
-    await fclear();
-    for(const x of d.files||[])await fput({id:x.id,name:x.name,type:x.type,blob:await (await fetch(x.data)).blob()});
-    state=d.state;state.meta=state.meta||{};save();resetForm();renderAll();alert('Đã nhập xong.');
+    d.state.items=d.state.items.filter(i=>i&&typeof i.id==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(i.date||''));
+    d.state.deleted=d.state.deleted||{};d.state.meta=d.state.meta||{};d.state.profile=d.state.profile||{};d.state.types=d.state.types||[];
+    const files=Array.isArray(d.files)?d.files:[];
+    const putFile=async x=>fput({id:x.id,name:x.name,type:x.type,blob:await (await fetch(x.data)).blob()});
+    if(impMode==='replace'){
+      if(!confirm('Ghi đè sẽ XÓA dữ liệu hiện tại trên máy này và thay bằng file sao lưu. Tiếp tục?'))return;
+      await fclear();
+      for(const x of files)await putFile(x);
+      state=d.state;save();resetForm();renderAll();alert('Đã nhập xong (ghi đè).');
+    }else{
+      if(!confirm('Gộp dữ liệu từ file sao lưu vào máy này?'))return;
+      const r=mergeStates(state,d.state),ns=r.state,s=r.stats;
+      const used=new Set(ns.items.map(i=>i.fileId).filter(Boolean));
+      const have=new Set((await fall()).map(x=>x.id));
+      for(const x of files)if(used.has(x.id)&&!have.has(x.id))await putFile(x);
+      for(const x of await fall())if(!used.has(x.id))await fdel(x.id);
+      state=ns;save();resetForm();renderAll();
+      alert('Đã gộp xong:\n• Thêm mới: '+s.added+' hoạt động\n• Cập nhật bản mới hơn: '+s.updated+'\n• Xóa theo máy kia: '+s.removed+'\n• Bỏ qua do trùng nội dung: '+s.dup+'\nHồ sơ và hệ số quy đổi giữ theo máy này (chỉ điền chỗ trống).');
+    }
   }catch(err){alert('Lỗi: '+err.message)}
-  e.target.value='';
 };
 $('#wipe').onclick=async()=>{
   if(!confirm('Xóa TOÀN BỘ dữ liệu và file đính kèm trên trình duyệt này?'))return;
