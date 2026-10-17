@@ -12,6 +12,20 @@ Công cụ web để lưu thông tin, chứng nhận CME và tự tính giờ t�
 - Đính kèm bản scan chứng nhận (PDF/ảnh, tối đa 8 MB mỗi file).
 - Xuất **Excel (.xlsx)** gồm 3 sheet: `Hoạt động` (đầy đủ danh sách, có bộ lọc, giờ tín chỉ là công thức, dòng tổng trong chu kỳ), `Tổng hợp` (hồ sơ, chu kỳ, giờ tích lũy, còn thiếu) và `Hệ số quy đổi`.
 - Xuất CSV, và xuất/nhập sao lưu JSON (kèm file scan) để chuyển sang thiết bị khác.
+- **Cài như ứng dụng và dùng khi mất mạng** (PWA): thêm vào màn hình chính điện thoại hoặc cài trên máy tính; sau lần mở đầu tiên có mạng, vẫn xem, nhập và xuất dữ liệu được khi ngoại tuyến.
+- Có sẵn khối **Lưu ý quan trọng**, **Hướng dẫn sử dụng**, thanh điều hướng nhanh và **cảnh báo nhắc sao lưu** (khi chưa từng sao lưu hoặc quá 30 ngày).
+
+## Các file của dự án
+
+| File | Vai trò |
+|---|---|
+| `index.html` | Toàn bộ ứng dụng |
+| `manifest.webmanifest` | Khai báo để cài thành ứng dụng (tên, biểu tượng, màu) |
+| `sw.js` | Service worker, giúp chạy khi mất mạng |
+| `icon-192.png`, `icon-512.png`, `icon-maskable-512.png`, `apple-touch-icon.png` | Biểu tượng ứng dụng |
+| `README.md` | Hướng dẫn này |
+
+**Phải tải lên đủ cả 8 file, giữ nguyên tên và cùng một thư mục.**
 
 ---
 
@@ -30,7 +44,7 @@ Công cụ web để lưu thông tin, chứng nhận CME và tự tính giờ t�
 ### Bước 2. Tải file lên
 
 1. Trong repository vừa tạo, chọn liên kết **uploading an existing file** (hoặc **Add file → Upload files**).
-2. Kéo thả hai file `index.html` và `README.md` vào, giữ nguyên tên file.
+2. Kéo thả **đủ 8 file** trong bảng "Các file của dự án" ở trên vào, giữ nguyên tên file. Thiếu `sw.js`, `manifest.webmanifest` hoặc các file biểu tượng thì không cài được và không dùng được khi mất mạng.
 3. Bấm **Commit changes** (nhánh `main`).
 
 ### Bước 3. Bật GitHub Pages
@@ -50,7 +64,17 @@ Có thể lưu địa chỉ này vào màn hình chính điện thoại hoặc �
 3. Ở mục **Thêm hoạt động CME**, nhập từng khóa học: ngày hoàn thành, tên, đơn vị, mã cơ sở đào tạo, hình thức, số tiết, số chứng nhận, đính kèm bản scan. Giờ tín chỉ tự tính theo số tiết × hệ số.
 4. Xem mục **Tổng quan** để biết đã tích lũy bao nhiêu giờ, còn thiếu bao nhiêu và còn bao nhiêu ngày.
 
-### Bước 5. Xuất dữ liệu và sao lưu
+### Bước 5. Cài như ứng dụng trên điện thoại hoặc máy tính (khuyên dùng)
+
+Mở địa chỉ của app **một lần khi có mạng**, đợi trang tải xong, rồi:
+
+- **Android (Chrome):** bấm nút **Cài đặt ứng dụng** ở đầu trang, hoặc menu ⋮ → *Cài đặt ứng dụng* / *Thêm vào màn hình chính*.
+- **iPhone, iPad (Safari):** bấm nút Chia sẻ → *Thêm vào Màn hình chính*. Nên làm bước này vì iOS có thể tự xóa dữ liệu của trang web nếu lâu không mở.
+- **Máy tính (Chrome, Edge):** bấm biểu tượng cài đặt ở cuối thanh địa chỉ.
+
+Sau đó mở app từ biểu tượng trên màn hình. Khi mất mạng, góc trên hiện "Ngoại tuyến – dữ liệu vẫn lưu trên máy" và mọi chức năng vẫn dùng bình thường. Khi có mạng trở lại, app tự lấy bản mới nếu bạn đã cập nhật trên GitHub.
+
+### Bước 6. Xuất dữ liệu và sao lưu
 
 Vào mục **Sao lưu & khôi phục**:
 
@@ -60,11 +84,11 @@ Vào mục **Sao lưu & khôi phục**:
 
 Nên xuất sao lưu JSON định kỳ (ví dụ mỗi lần thêm vài chứng nhận mới) và cất ở nơi an toàn như Google Drive.
 
-### Bước 6. Cập nhật phiên bản mới của app
+### Bước 7. Cập nhật phiên bản mới của app
 
-1. Vào repository, bấm vào file `index.html`, chọn biểu tượng bút chì (Edit) hoặc quay lại trang chính chọn **Add file → Upload files**.
-2. Tải `index.html` mới lên với **đúng tên cũ** để ghi đè, rồi **Commit changes**.
-3. Chờ 1–2 phút, mở lại trang và nhấn **Ctrl+F5** (hoặc kéo tải lại trên điện thoại) để xóa bộ nhớ đệm.
+1. Vào repository, chọn **Add file → Upload files**.
+2. Tải các file mới lên với **đúng tên cũ** để ghi đè (luôn tải cả `index.html` và `sw.js` cùng lúc), rồi **Commit changes**.
+3. Chờ 1–2 phút. Mở app khi có mạng; nếu vẫn thấy bản cũ, đóng hẳn app rồi mở lại một lần nữa (trên máy tính nhấn **Ctrl+F5**).
 
 Dữ liệu của bạn nằm trong trình duyệt nên **không bị mất** khi cập nhật app, miễn là vẫn dùng đúng địa chỉ và trình duyệt cũ.
 
@@ -79,6 +103,10 @@ Dữ liệu của bạn nằm trong trình duyệt nên **không bị mất** kh
 | Mất dữ liệu sau khi xóa lịch sử trình duyệt | Nhập lại từ file sao lưu JSON gần nhất. |
 | Không xem được file scan | Trình duyệt có thể chặn cửa sổ bật lên; cho phép pop-up cho trang này. |
 | Dùng chế độ ẩn danh | Dữ liệu bị xóa khi đóng cửa sổ; hãy dùng cửa sổ thường. |
+| Không thấy nút "Cài đặt ứng dụng" | Chỉ hiện trên Chrome/Edge khi trang chạy qua https và đủ 8 file. Trên iPhone dùng Chia sẻ → Thêm vào Màn hình chính. |
+| Mất mạng không mở được app | Bạn cần mở app ít nhất một lần khi có mạng để tải về máy. Nếu vẫn lỗi, mở lại khi có mạng rồi thử lại. |
+| iPhone/iPad: nhập trong app rồi mở bằng Safari không thấy dữ liệu | Trên iOS, app đã thêm vào Màn hình chính và Safari có thể là hai kho dữ liệu riêng. Hãy chọn một nơi dùng cố định (khuyên dùng app đã cài), hoặc chuyển qua lại bằng sao lưu JSON. |
+| Cảnh báo "chưa sao lưu" | Vào mục Sao lưu, bấm "Xuất sao lưu (JSON)"; cảnh báo tự tắt. |
 
 ## Lưu ý quan trọng
 

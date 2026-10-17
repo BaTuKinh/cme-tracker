@@ -11,6 +11,13 @@
 <meta name="author" content="Bá Tử Kinh | Tường Vi">
 <meta name="copyright" content="© 2026 Bá Tử Kinh | Tường Vi. Bảo lưu mọi quyền.">
 <meta name="description" content="CME Tracker: lưu chứng nhận và tự tính giờ tín chỉ cập nhật kiến thức y khoa liên tục.">
+<meta name="theme-color" content="#0f6fde">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="CME Tracker">
 <style>
 :root{--bg:#f6f7f9;--card:#fff;--tx:#1b2430;--mut:#6b7686;--bd:#dde2e9;--pri:#0f6fde;--ok:#1a9d57;--warn:#d98a00;--bad:#d8392f}
 @media (prefers-color-scheme:dark){:root{--bg:#12161c;--card:#1b222b;--tx:#e8edf3;--mut:#93a0b1;--bd:#2c3743;--pri:#4b9bff;--ok:#3ec27c;--warn:#f0b13a;--bad:#ff6a5f}}
@@ -51,15 +58,74 @@ tr.out{opacity:.5}
 .hide{display:none}
 footer{text-align:center;color:var(--mut);font-size:12.5px;padding:8px 0 24px}
 footer b{color:var(--tx)}
+html{scroll-behavior:smooth;scroll-padding-top:56px}
+a{color:var(--pri)}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.nav{display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;margin:0 0 14px;position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0}
+.nav a{font-size:13px;padding:4px 12px;border:1px solid var(--bd);border-radius:999px;color:var(--tx);text-decoration:none;background:var(--card);white-space:nowrap}
+details.card>summary{cursor:pointer;font-weight:600;font-size:16px}
+details.card[open]>summary{margin-bottom:12px}
+details.notice{border-left:4px solid var(--warn)}
+details.card ul,details.card ol{margin:0 0 8px;padding-left:20px}
+details.card li{margin:5px 0}
+details.card h3{font-size:14px;margin:14px 0 6px}
+#bkWarn .alert{margin:0 0 16px}
+.net-off{color:var(--warn);border-color:var(--warn)}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>CME Tracker</h1>
-  <p class="sub">Lưu chứng nhận và tự tính giờ tín chỉ cập nhật kiến thức y khoa liên tục (tối thiểu 120 giờ tín chỉ / 05 năm – Thông tư 32/2023/TT-BYT). Dữ liệu chỉ lưu trên trình duyệt của bạn.</p>
+  <header class="top">
+    <div>
+      <h1>CME Tracker</h1>
+      <p class="sub">Lưu chứng nhận và tự tính giờ tín chỉ cập nhật kiến thức y khoa liên tục (tối thiểu 120 giờ tín chỉ / 05 năm – Thông tư 32/2023/TT-BYT).</p>
+    </div>
+    <div class="row">
+      <span id="net" class="tag">Trực tuyến</span>
+      <button id="installBtn" class="sm pri hide" type="button">Cài đặt ứng dụng</button>
+    </div>
+  </header>
 
-  <div class="card">
-    <h2>Hồ sơ &amp; chu kỳ 5 năm</h2>
+  <nav class="nav">
+    <a href="#dash">Tổng quan</a>
+    <a href="#addForm">Thêm hoạt động</a>
+    <a href="#listCard">Danh sách</a>
+    <a href="#typesCard" data-open="typesCard">Hệ số</a>
+    <a href="#backupCard">Sao lưu</a>
+    <a href="#guide" data-open="guide">Hướng dẫn</a>
+  </nav>
+
+  <details class="card notice" id="warn" open>
+    <summary>Lưu ý quan trọng</summary>
+    <ul>
+      <li><b>Hệ số quy đổi:</b> mặc định mọi hình thức đều tính 1 tiết = 1 giờ tín chỉ. Hãy tự đối chiếu và chỉnh theo <b>Phụ lục I Thông tư 32/2023/TT-BYT</b> ở mục <a href="#typesCard" data-open="typesCard">Hệ số quy đổi</a> trước khi tin vào tổng giờ.</li>
+      <li><b>Dữ liệu chỉ nằm trên thiết bị này:</b> không có máy chủ và không đồng bộ giữa các máy. Xóa dữ liệu trình duyệt hoặc đổi máy sẽ mất dữ liệu nếu chưa <a href="#backupCard">sao lưu</a>.</li>
+      <li><b>Không phải xác nhận chính thức:</b> đây là công cụ hỗ trợ cá nhân; số liệu cuối cùng do cơ quan quản lý và nơi cấp chứng chỉ hành nghề xác nhận.</li>
+    </ul>
+  </details>
+
+  <div id="bkWarn"></div>
+
+  <details class="card" id="guide">
+    <summary>Hướng dẫn sử dụng</summary>
+    <ol>
+      <li>Mở mục <b>Hồ sơ &amp; chu kỳ 5 năm</b> bên dưới, nhập ngày bắt đầu chu kỳ (ngày cấp hoặc gia hạn chứng chỉ hành nghề) và số giờ yêu cầu.</li>
+      <li>Kiểm tra mục <b>Hệ số quy đổi</b> cho đúng quy định.</li>
+      <li>Sau mỗi khóa học hoặc hội nghị, vào <b>Thêm hoạt động</b>, nhập thông tin, đính kèm bản scan chứng nhận rồi lưu. Giờ tín chỉ tự tính.</li>
+      <li>Xem <b>Tổng quan</b> để biết đã đủ giờ chưa, còn thiếu bao nhiêu và còn bao nhiêu ngày.</li>
+      <li>Định kỳ bấm <b>Xuất sao lưu (JSON)</b>. Cần danh sách để nộp hồ sơ thì bấm <b>Xuất Excel</b>.</li>
+    </ol>
+    <h3>Cài như ứng dụng và dùng khi mất mạng</h3>
+    <ul>
+      <li><b>Android (Chrome):</b> bấm nút “Cài đặt ứng dụng” ở đầu trang, hoặc menu ⋮ → “Cài đặt ứng dụng” / “Thêm vào màn hình chính”.</li>
+      <li><b>iPhone, iPad (Safari):</b> bấm nút Chia sẻ → “Thêm vào Màn hình chính”. Nên cài, vì iOS có thể tự xóa dữ liệu của trang web lâu không mở.</li>
+      <li><b>Máy tính (Chrome, Edge):</b> bấm biểu tượng cài đặt ở thanh địa chỉ.</li>
+      <li>Hãy mở app <b>một lần khi có mạng</b> để tải về máy. Sau đó vẫn xem, nhập và xuất dữ liệu được khi không có Internet. Khi có mạng, app tự lấy bản mới.</li>
+    </ul>
+  </details>
+
+  <details class="card" id="profile">
+    <summary>Hồ sơ &amp; chu kỳ 5 năm</summary>
     <div class="grid g2">
       <div><label>Họ tên</label><input id="pName"></div>
       <div><label>Số chứng chỉ hành nghề / giấy phép hành nghề</label><input id="pLic"></div>
@@ -67,11 +133,11 @@ footer b{color:var(--tx)}
       <div><label>Số giờ tín chỉ yêu cầu</label><input id="pReq" type="number" min="1" value="120"></div>
     </div>
     <div class="hint">Chu kỳ tính từ ngày bắt đầu đến hết ngày liền trước ngày kỷ niệm 5 năm. Hãy đối chiếu thời điểm bắt đầu tính theo quy định/hướng dẫn của cơ quan cấp phép của bạn.</div>
-  </div>
+  </details>
 
   <div class="card" id="dash"></div>
 
-  <div class="card">
+  <div class="card" id="addForm">
     <h2 id="formTitle">Thêm hoạt động CME</h2>
     <form id="f">
       <div class="grid g2">
@@ -94,7 +160,7 @@ footer b{color:var(--tx)}
     </form>
   </div>
 
-  <div class="card">
+  <div class="card" id="listCard">
     <div class="row" style="justify-content:space-between;margin-bottom:10px">
       <h2 style="margin:0">Danh sách hoạt động</h2>
       <input id="q" placeholder="Tìm kiếm..." style="max-width:240px">
@@ -105,14 +171,14 @@ footer b{color:var(--tx)}
     </table></div>
   </div>
 
-  <div class="card">
-    <h2>Hệ số quy đổi theo hình thức</h2>
+  <details class="card" id="typesCard">
+    <summary>Hệ số quy đổi theo hình thức</summary>
     <p class="hint" style="margin-top:0">Mặc định 1 tiết = 1 giờ tín chỉ cho khóa học ngắn hạn. Các hình thức khác (hội nghị, biên soạn tài liệu, nghiên cứu, giảng dạy, tự học) hãy nhập hệ số đúng theo <b>Phụ lục I Thông tư 32/2023/TT-BYT</b> – ứng dụng không tự điền để tránh sai.</p>
     <div id="types"></div>
     <div class="row" style="margin-top:8px"><button type="button" id="addType" class="sm">+ Thêm hình thức</button></div>
-  </div>
+  </details>
 
-  <div class="card">
+  <div class="card" id="backupCard">
     <h2>Sao lưu &amp; khôi phục</h2>
     <div class="row">
       <button id="exJson">Xuất sao lưu (JSON, kèm file scan)</button>
@@ -122,7 +188,8 @@ footer b{color:var(--tx)}
       <input id="imFile" type="file" accept="application/json" class="hide">
       <button id="wipe" class="del">Xóa toàn bộ dữ liệu</button>
     </div>
-    <div class="hint">Dữ liệu nằm trong trình duyệt/thiết bị này. Xóa dữ liệu trình duyệt sẽ mất dữ liệu – hãy xuất sao lưu định kỳ.</div>
+    <div class="hint">Dữ liệu nằm trong trình duyệt/thiết bị này. Xóa dữ liệu trình duyệt sẽ mất dữ liệu – hãy xuất sao lưu định kỳ. Trên iPhone/iPad, dữ liệu trong app đã cài và trong Safari có thể là hai kho riêng, nên hãy chọn một nơi dùng cố định.</div>
+    <div class="hint" id="bkLast"></div>
   </div>
   <footer>
     <div>CME Tracker · Tác giả: <b>Bá Tử Kinh | Tường Vi</b></div>
@@ -147,8 +214,8 @@ const DEF_TYPES=[
 ];
 let state=load(), editId=null, q='';
 function load(){
-  try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&Array.isArray(s.items))return s}catch(e){}
-  return{profile:{name:'',license:'',cycleStart:'',required:120},types:DEF_TYPES.map(t=>({...t})),items:[]};
+  try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&Array.isArray(s.items)){s.meta=s.meta||{};return s}}catch(e){}
+  return{profile:{name:'',license:'',cycleStart:'',required:120},types:DEF_TYPES.map(t=>({...t})),items:[],meta:{lastBackup:null}};
 }
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){alert('Không lưu được dữ liệu: '+e.message)}}
 
@@ -174,7 +241,7 @@ const inCycle=(it,c)=>c&&pd(it.date)>=c.start&&pd(it.date)<=c.end;
 function renderDash(){
   const c=cycle(),req=Number(state.profile.required)||120;
   const el=$('#dash');
-  if(!c){el.innerHTML='<h2>Tổng quan</h2><div class="alert warn">Hãy nhập ngày bắt đầu chu kỳ 5 năm ở phần Hồ sơ để ứng dụng tự tính.</div>';return}
+  if(!c){el.innerHTML='<h2>Tổng quan</h2><div class="alert warn">Hãy nhập ngày bắt đầu chu kỳ 5 năm ở mục <a href="#profile" data-open="profile">Hồ sơ &amp; chu kỳ 5 năm</a> để ứng dụng tự tính.</div>';return}
   const counted=state.items.filter(i=>inCycle(i,c));
   const total=counted.reduce((s,i)=>s+Number(i.credits||0),0);
   const remain=Math.max(0,req-total);
@@ -221,7 +288,9 @@ function renderTypes(){
 function renderAll(){
   $('#pName').value=state.profile.name||'';$('#pLic').value=state.profile.license||'';
   $('#pStart').value=state.profile.cycleStart||'';$('#pReq').value=state.profile.required||120;
-  renderTypes();renderDash();renderTable();syncFactor();
+  renderTypes();renderDash();renderTable();syncFactor();renderBk();
+  $('#profile').open=!state.profile.cycleStart;
+  $('#guide').open=!state.profile.cycleStart&&!state.items.length;
 }
 
 /* ---------- Form ---------- */
@@ -244,7 +313,7 @@ $('#f').onsubmit=async e=>{
     if(file){if(it.fileId)await fdel(it.fileId);it.fileId=uid();it.fileName=file.name;await fput({id:it.fileId,name:file.name,type:file.type,blob:file})}
   }catch(err){alert('Không lưu được file đính kèm: '+err.message)}
   if(old)Object.assign(old,it);else state.items.push(it);
-  save();resetForm();renderDash();renderTable();
+  save();resetForm();renderDash();renderTable();renderBk();
 };
 $('#tb').onclick=async e=>{
   const b=e.target.closest('button');if(!b)return;
@@ -252,7 +321,7 @@ $('#tb').onclick=async e=>{
   if(b.dataset.act==='del'){
     if(!confirm('Xóa hoạt động "'+it.title+'"?'))return;
     if(it.fileId)try{await fdel(it.fileId)}catch(_){}
-    state.items=state.items.filter(i=>i!==it);save();renderDash();renderTable();
+    state.items=state.items.filter(i=>i!==it);save();renderDash();renderTable();renderBk();
   }else if(b.dataset.act==='edit'){
     editId=it.id;$('#fDate').value=it.date;$('#fTitle').value=it.title;$('#fOrg').value=it.org;$('#fCode').value=it.orgCode;
     $('#fType').value=it.typeId;$('#fAmt').value=it.amount;$('#fFac').value=it.factor;$('#fCert').value=it.certNo;$('#fNote').value=it.note;
@@ -378,6 +447,7 @@ const download=(name,blob)=>{const a=document.createElement('a');a.href=URL.crea
 $('#exJson').onclick=async()=>{
   const files=[];
   try{for(const f of await fall())files.push({id:f.id,name:f.name,type:f.type,data:await toDataURL(f.blob)})}catch(_){}
+  state.meta=Object.assign({},state.meta,{lastBackup:new Date().toISOString()});save();renderBk();
   download('cme-backup-'+new Date().toISOString().slice(0,10)+'.json',new Blob([JSON.stringify({version:1,state,files})],{type:'application/json'}));
 };
 $('#exCsv').onclick=()=>{
@@ -396,7 +466,7 @@ $('#imFile').onchange=async e=>{
     if(!confirm('Nhập sao lưu sẽ GHI ĐÈ dữ liệu hiện tại. Tiếp tục?'))return;
     await fclear();
     for(const x of d.files||[])await fput({id:x.id,name:x.name,type:x.type,blob:await (await fetch(x.data)).blob()});
-    state=d.state;save();resetForm();renderAll();alert('Đã nhập xong.');
+    state=d.state;state.meta=state.meta||{};save();resetForm();renderAll();alert('Đã nhập xong.');
   }catch(err){alert('Lỗi: '+err.message)}
   e.target.value='';
 };
@@ -405,6 +475,30 @@ $('#wipe').onclick=async()=>{
   try{await fclear()}catch(_){}
   localStorage.removeItem(KEY);state=load();resetForm();renderAll();
 };
+
+/* ---------- Cảnh báo sao lưu, điều hướng, ngoại tuyến, cài đặt ứng dụng ---------- */
+function renderBk(){
+  const last=state.meta&&state.meta.lastBackup;
+  let html='',info='Bạn chưa từng xuất sao lưu JSON trên thiết bị này.';
+  if(last){const d=new Date(last);info='Sao lưu JSON gần nhất: '+fmt(d)+' '+d.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'})}
+  if(state.items.length){
+    const days=last?Math.floor((Date.now()-new Date(last))/864e5):null;
+    if(!last)html='<div class="alert bad">Bạn đã nhập dữ liệu nhưng <b>chưa sao lưu lần nào</b>. Hãy vào mục <a href="#backupCard">Sao lưu</a> và bấm “Xuất sao lưu (JSON)”.</div>';
+    else if(days>=30)html='<div class="alert warn">Lần sao lưu gần nhất cách đây <b>'+days+' ngày</b>. Nên sao lưu lại tại mục <a href="#backupCard">Sao lưu</a>.</div>';
+  }
+  $('#bkWarn').innerHTML=html;$('#bkLast').textContent=info;
+}
+document.addEventListener('click',e=>{const a=e.target.closest('a[data-open]');if(a){const d=document.getElementById(a.dataset.open);if(d)d.open=true}});
+try{if(localStorage.getItem('cme.warnSeen')==='1')$('#warn').open=false}catch(_){}
+$('#warn>summary').addEventListener('click',()=>{try{localStorage.setItem('cme.warnSeen',$('#warn').open?'1':'0')}catch(_){}});
+function netState(){const on=navigator.onLine,t=$('#net');t.textContent=on?'Trực tuyến':'Ngoại tuyến – dữ liệu vẫn lưu trên máy';t.classList.toggle('net-off',!on)}
+addEventListener('online',netState);addEventListener('offline',netState);netState();
+let deferredInstall=null;
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;$('#installBtn').classList.remove('hide')});
+$('#installBtn').onclick=async()=>{if(!deferredInstall)return;deferredInstall.prompt();try{await deferredInstall.userChoice}catch(_){}deferredInstall=null;$('#installBtn').classList.add('hide')};
+addEventListener('appinstalled',()=>$('#installBtn').classList.add('hide'));
+if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
+try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(_){}
 
 renderAll();resetForm();
 </script>

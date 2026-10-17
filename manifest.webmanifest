@@ -1,0 +1,17 @@
+{
+  "name": "CME Tracker – Giờ tín chỉ CME",
+  "short_name": "CME Tracker",
+  "description": "Lưu chứng nhận và tự tính giờ tín chỉ cập nhật kiến thức y khoa liên tục. Tác giả: Bá Tử Kinh | Tường Vi.",
+  "lang": "vi",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f6f7f9",
+  "theme_color": "#0f6fde",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
