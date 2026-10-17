@@ -1,560 +1,63 @@
 <!doctype html>
-<!--
-  CME Tracker – theo dõi giờ tín chỉ cập nhật kiến thức y khoa liên tục
-  Tác giả / Bản quyền: © 2026 Bá Tử Kinh | Tường Vi. Bảo lưu mọi quyền.
--->
 <html lang="vi">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CME Tracker – Quản lý giờ tín chỉ</title>
-<meta name="author" content="Bá Tử Kinh | Tường Vi">
-<meta name="copyright" content="© 2026 Bá Tử Kinh | Tường Vi. Bảo lưu mọi quyền.">
-<meta name="description" content="CME Tracker: lưu chứng nhận và tự tính giờ tín chỉ cập nhật kiến thức y khoa liên tục.">
-<meta name="theme-color" content="#0f6fde">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" type="image/png" href="icon-192.png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="CME Tracker">
-<style>
-:root{--bg:#f6f7f9;--card:#fff;--tx:#1b2430;--mut:#6b7686;--bd:#dde2e9;--pri:#0f6fde;--ok:#1a9d57;--warn:#d98a00;--bad:#d8392f}
-@media (prefers-color-scheme:dark){:root{--bg:#12161c;--card:#1b222b;--tx:#e8edf3;--mut:#93a0b1;--bd:#2c3743;--pri:#4b9bff;--ok:#3ec27c;--warn:#f0b13a;--bad:#ff6a5f}}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-.wrap{max-width:1080px;margin:0 auto;padding:16px}
-h1{font-size:22px;margin:8px 0 2px}h2{font-size:16px;margin:0 0 12px}
-.sub{color:var(--mut);margin:0 0 16px}
-.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:16px}
-.grid{display:grid;gap:12px}
-.g2{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
-label{display:block;font-size:13px;color:var(--mut);margin-bottom:4px}
-input,select,textarea{width:100%;padding:8px 10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit}
-textarea{min-height:60px;resize:vertical}
-button{padding:8px 14px;border-radius:8px;border:1px solid var(--bd);background:var(--card);color:var(--tx);font:inherit;cursor:pointer}
-button.pri{background:var(--pri);border-color:var(--pri);color:#fff}
-button.sm{padding:3px 9px;font-size:13px}
-button.del{color:var(--bad)}
-.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.stat{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:12px}
-.stat div{background:var(--bg);border-radius:10px;padding:10px 12px}
-.stat b{display:block;font-size:22px}.stat span{font-size:12px;color:var(--mut)}
-.bar{height:14px;background:var(--bg);border-radius:8px;overflow:hidden;border:1px solid var(--bd)}
-.bar i{display:block;height:100%;background:var(--pri);transition:width .3s}
-.alert{padding:10px 12px;border-radius:8px;margin-top:12px;font-size:14px}
-.alert.warn{background:rgba(217,138,0,.14);color:var(--warn)}
-.alert.bad{background:rgba(216,57,47,.14);color:var(--bad)}
-.alert.ok{background:rgba(26,157,87,.14);color:var(--ok)}
-table{width:100%;border-collapse:collapse;font-size:14px}
-th,td{padding:8px 6px;border-bottom:1px solid var(--bd);text-align:left;vertical-align:top}
-th{font-size:12px;color:var(--mut);font-weight:600;white-space:nowrap}
-.tbl{overflow-x:auto}
-tr.out{opacity:.5}
-.num{text-align:right;white-space:nowrap}
-.tag{font-size:11px;padding:1px 6px;border-radius:6px;background:var(--bg);border:1px solid var(--bd);color:var(--mut)}
-.yr{display:grid;grid-template-columns:150px 1fr 60px;gap:8px;align-items:center;font-size:13px;margin:4px 0}
-.hint{font-size:12px;color:var(--mut);margin-top:6px}
-.hide{display:none}
-footer{text-align:center;color:var(--mut);font-size:12.5px;padding:8px 0 24px}
-footer b{color:var(--tx)}
-html{scroll-behavior:smooth;scroll-padding-top:56px}
-a{color:var(--pri)}
-.top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
-.nav{display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;margin:0 0 14px;position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0}
-.nav a{font-size:13px;padding:4px 12px;border:1px solid var(--bd);border-radius:999px;color:var(--tx);text-decoration:none;background:var(--card);white-space:nowrap}
-details.card>summary{cursor:pointer;font-weight:600;font-size:16px}
-details.card[open]>summary{margin-bottom:12px}
-details.notice{border-left:4px solid var(--warn)}
-details.card ul,details.card ol{margin:0 0 8px;padding-left:20px}
-details.card li{margin:5px 0}
-details.card h3{font-size:14px;margin:14px 0 6px}
-#bkWarn .alert{margin:0 0 16px}
-.net-off{color:var(--warn);border-color:var(--warn)}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nguyễn Thị Tường Vi – Đảm bảo chất lượng xét nghiệm</title>
+  <meta name="description" content="Hồ sơ nghề nghiệp của Nguyễn Thị Tường Vi: nhân viên Đảm bảo chất lượng xét nghiệm, Trung tâm Y tế Hòa Hảo. Công bố khoa học, đào tạo ISO 15189, Westgard và Sigma.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="wrap">
-  <header class="top">
-    <div>
-      <h1>CME Tracker</h1>
-      <p class="sub">Lưu chứng nhận và tự tính giờ tín chỉ cập nhật kiến thức y khoa liên tục (tối thiểu 120 giờ tín chỉ / 05 năm – Thông tư 32/2023/TT-BYT).</p>
-    </div>
-    <div class="row">
-      <span id="net" class="tag">Trực tuyến</span>
-      <button id="installBtn" class="sm pri hide" type="button">Cài đặt ứng dụng</button>
+  <a class="skip" href="#main">Bỏ qua điều hướng</a>
+
+  <header class="topbar no-print">
+    <div class="topbar-in">
+      <a class="brand" href="#top" id="brand"></a>
+      <nav aria-label="Các mục chính">
+        <a href="#experience">Kinh nghiệm</a>
+        <a href="#skills">Kỹ năng</a>
+        <a href="#research">Nghiên cứu</a>
+        <a href="#education">Học vấn</a>
+        <a href="#certificates">Đào tạo</a>
+      </nav>
+      <div class="tools">
+        <button id="theme-btn" type="button" aria-label="Đổi giao diện sáng hoặc tối">Giao diện</button>
+        <button id="print-btn" type="button" class="solid">In hoặc lưu PDF</button>
+      </div>
     </div>
   </header>
 
-  <nav class="nav">
-    <a href="#dash">Tổng quan</a>
-    <a href="#addForm">Thêm hoạt động</a>
-    <a href="#listCard">Danh sách</a>
-    <a href="#typesCard" data-open="typesCard">Hệ số</a>
-    <a href="#backupCard">Sao lưu</a>
-    <a href="#guide" data-open="guide">Hướng dẫn</a>
-  </nav>
+  <main id="main">
+    <section id="top" class="hero">
+      <div class="hero-text" id="about"></div>
+      <figure class="chart" id="chart"></figure>
+    </section>
 
-  <details class="card notice" id="warn" open>
-    <summary>Lưu ý quan trọng</summary>
-    <ul>
-      <li><b>Hệ số quy đổi:</b> mặc định mọi hình thức đều tính 1 tiết = 1 giờ tín chỉ. Hãy tự đối chiếu và chỉnh theo <b>Phụ lục I Thông tư 32/2023/TT-BYT</b> ở mục <a href="#typesCard" data-open="typesCard">Hệ số quy đổi</a> trước khi tin vào tổng giờ.</li>
-      <li><b>Dữ liệu chỉ nằm trên thiết bị này:</b> không có máy chủ và không đồng bộ giữa các máy. Xóa dữ liệu trình duyệt hoặc đổi máy sẽ mất dữ liệu nếu chưa <a href="#backupCard">sao lưu</a>.</li>
-      <li><b>Không phải xác nhận chính thức:</b> đây là công cụ hỗ trợ cá nhân; số liệu cuối cùng do cơ quan quản lý và nơi cấp chứng chỉ hành nghề xác nhận.</li>
-    </ul>
-  </details>
+    <dl id="highlights" class="facts"></dl>
 
-  <div id="bkWarn"></div>
-
-  <details class="card" id="guide">
-    <summary>Hướng dẫn sử dụng</summary>
-    <ol>
-      <li>Mở mục <b>Hồ sơ &amp; chu kỳ 5 năm</b> bên dưới, nhập ngày bắt đầu chu kỳ (ngày cấp hoặc gia hạn chứng chỉ hành nghề) và số giờ yêu cầu.</li>
-      <li>Kiểm tra mục <b>Hệ số quy đổi</b> cho đúng quy định.</li>
-      <li>Sau mỗi khóa học hoặc hội nghị, vào <b>Thêm hoạt động</b>, nhập thông tin, đính kèm bản scan chứng nhận rồi lưu. Giờ tín chỉ tự tính.</li>
-      <li>Xem <b>Tổng quan</b> để biết đã đủ giờ chưa, còn thiếu bao nhiêu và còn bao nhiêu ngày.</li>
-      <li>Định kỳ bấm <b>Xuất sao lưu (JSON)</b>. Cần danh sách để nộp hồ sơ thì bấm <b>Xuất Excel</b>.</li>
-    </ol>
-    <h3>Cài như ứng dụng và dùng khi mất mạng</h3>
-    <ul>
-      <li><b>Android (Chrome):</b> bấm nút “Cài đặt ứng dụng” ở đầu trang, hoặc menu ⋮ → “Cài đặt ứng dụng” / “Thêm vào màn hình chính”.</li>
-      <li><b>iPhone, iPad (Safari):</b> bấm nút Chia sẻ → “Thêm vào Màn hình chính”. Nên cài, vì iOS có thể tự xóa dữ liệu của trang web lâu không mở.</li>
-      <li><b>Máy tính (Chrome, Edge):</b> bấm biểu tượng cài đặt ở thanh địa chỉ.</li>
-      <li>Hãy mở app <b>một lần khi có mạng</b> để tải về máy. Sau đó vẫn xem, nhập và xuất dữ liệu được khi không có Internet. Khi có mạng, app tự lấy bản mới.</li>
-    </ul>
-    <h3>Dùng cả máy tính và điện thoại</h3>
-    <ul>
-      <li>Mỗi thiết bị giữ dữ liệu riêng. Để chuyển qua lại: xuất <b>sao lưu JSON</b> ở máy này (gửi qua Zalo, email hoặc Google Drive), rồi ở máy kia bấm <b>Nhập &amp; gộp dữ liệu</b>.</li>
-      <li>Gộp giữ lại hoạt động mới ở cả hai máy, lấy bản sửa mới hơn, áp dụng việc xóa và bỏ qua mục trùng. Hồ sơ và hệ số vẫn theo máy nhận. Hai máy nên để đúng giờ để so sánh “mới hơn” chính xác.</li>
-      <li>Chỉ dùng <b>Nhập &amp; ghi đè</b> khi muốn máy này giống hệt file sao lưu.</li>
-    </ul>
-  </details>
-
-  <details class="card" id="profile">
-    <summary>Hồ sơ &amp; chu kỳ 5 năm</summary>
-    <div class="grid g2">
-      <div><label>Họ tên</label><input id="pName"></div>
-      <div><label>Số chứng chỉ hành nghề / giấy phép hành nghề</label><input id="pLic"></div>
-      <div><label>Ngày bắt đầu chu kỳ 5 năm (ngày cấp / gia hạn)</label><input id="pStart" type="date"></div>
-      <div><label>Số giờ tín chỉ yêu cầu</label><input id="pReq" type="number" min="1" value="120"></div>
-    </div>
-    <div class="hint">Chu kỳ tính từ ngày bắt đầu đến hết ngày liền trước ngày kỷ niệm 5 năm. Hãy đối chiếu thời điểm bắt đầu tính theo quy định/hướng dẫn của cơ quan cấp phép của bạn.</div>
-  </details>
-
-  <div class="card" id="dash"></div>
-
-  <div class="card" id="addForm">
-    <h2 id="formTitle">Thêm hoạt động CME</h2>
-    <form id="f">
-      <div class="grid g2">
-        <div><label>Ngày hoàn thành *</label><input id="fDate" type="date" required></div>
-        <div><label>Tên khóa học / hội nghị *</label><input id="fTitle" required></div>
-        <div><label>Đơn vị tổ chức</label><input id="fOrg"></div>
-        <div><label>Mã cơ sở đào tạo liên tục</label><input id="fCode"></div>
-        <div><label>Hình thức *</label><select id="fType"></select></div>
-        <div><label>Số tiết / giờ / đơn vị thực tế *</label><input id="fAmt" type="number" min="0" step="0.25" required></div>
-        <div><label>Hệ số quy đổi</label><input id="fFac" type="number" min="0" step="0.01"></div>
-        <div><label>Giờ tín chỉ (tự tính)</label><input id="fCred" readonly></div>
-        <div><label>Số chứng nhận</label><input id="fCert"></div>
-        <div><label>Đính kèm bản scan (PDF/ảnh, ≤ 8 MB)</label><input id="fFile" type="file" accept="application/pdf,image/*"></div>
+    <section id="experience" class="sec"><h2>Kinh nghiệm làm việc</h2><div class="body" id="exp-list"></div></section>
+    <section id="skills" class="sec"><h2>Kỹ năng chuyên môn</h2><div class="body" id="skill-list"></div></section>
+    <section id="research" class="sec">
+      <h2>Nghiên cứu và công bố</h2>
+      <div class="body">
+        <div class="filters no-print" id="filters" role="group" aria-label="Lọc theo loại công trình"></div>
+        <div id="res-list"></div>
       </div>
-      <div style="margin-top:12px"><label>Ghi chú</label><textarea id="fNote"></textarea></div>
-      <div class="row" style="margin-top:12px">
-        <button class="pri" type="submit" id="fSubmit">Lưu hoạt động</button>
-        <button type="button" id="fCancel" class="hide">Hủy sửa</button>
-      </div>
-    </form>
-  </div>
+    </section>
+    <section id="education" class="sec"><h2>Học vấn</h2><div class="body" id="edu-list"></div></section>
+    <section id="certificates" class="sec"><h2>Đào tạo và chứng chỉ</h2><div class="body" id="cert-list"></div></section>
+    <section id="memberships" class="sec"><h2>Thành viên hiệp hội</h2><div class="body" id="member-list"></div></section>
+  </main>
 
-  <div class="card" id="listCard">
-    <div class="row" style="justify-content:space-between;margin-bottom:10px">
-      <h2 style="margin:0">Danh sách hoạt động</h2>
-      <input id="q" placeholder="Tìm kiếm..." style="max-width:240px">
-    </div>
-    <div class="tbl"><table>
-      <thead><tr><th>Ngày</th><th>Hoạt động</th><th>Hình thức</th><th class="num">Số lượng</th><th class="num">Hệ số</th><th class="num">Giờ TC</th><th>Chứng nhận</th><th></th></tr></thead>
-      <tbody id="tb"></tbody>
-    </table></div>
-  </div>
-
-  <details class="card" id="typesCard">
-    <summary>Hệ số quy đổi theo hình thức</summary>
-    <p class="hint" style="margin-top:0">Mặc định 1 tiết = 1 giờ tín chỉ cho khóa học ngắn hạn. Các hình thức khác (hội nghị, biên soạn tài liệu, nghiên cứu, giảng dạy, tự học) hãy nhập hệ số đúng theo <b>Phụ lục I Thông tư 32/2023/TT-BYT</b> – ứng dụng không tự điền để tránh sai.</p>
-    <div id="types"></div>
-    <div class="row" style="margin-top:8px"><button type="button" id="addType" class="sm">+ Thêm hình thức</button></div>
-  </details>
-
-  <div class="card" id="backupCard">
-    <h2>Sao lưu &amp; khôi phục</h2>
-    <div class="row">
-      <button id="exJson">Xuất sao lưu (JSON, kèm file scan)</button>
-      <button id="exXlsx" class="pri">Xuất Excel (.xlsx)</button>
-      <button id="exCsv">Xuất bảng (CSV)</button>
-      <button id="imMerge">Nhập &amp; gộp dữ liệu (khuyên dùng)</button>
-      <button id="imReplace">Nhập &amp; ghi đè</button>
-      <input id="imFile" type="file" accept="application/json" class="hide">
-      <button id="wipe" class="del">Xóa toàn bộ dữ liệu</button>
-    </div>
-    <div class="hint">Dữ liệu nằm trong trình duyệt/thiết bị này. Xóa dữ liệu trình duyệt sẽ mất dữ liệu – hãy xuất sao lưu định kỳ. Trên iPhone/iPad, dữ liệu trong app đã cài và trong Safari có thể là hai kho riêng, nên hãy chọn một nơi dùng cố định.</div>
-    <div class="hint"><b>Dùng cả máy tính và điện thoại:</b> xuất sao lưu JSON ở máy này, rồi bấm “Nhập &amp; gộp dữ liệu” ở máy kia (và ngược lại). Gộp sẽ thêm hoạt động mới, giữ bản sửa mới hơn, áp dụng cả việc xóa, bỏ qua mục trùng. “Ghi đè” thì thay hoàn toàn dữ liệu của máy này.</div>
-    <div class="hint" id="bkLast"></div>
-  </div>
   <footer>
-    <div>CME Tracker · Tác giả: <b>Bá Tử Kinh | Tường Vi</b></div>
-    <div>© 2026 Bá Tử Kinh | Tường Vi. Bảo lưu mọi quyền. Công cụ hỗ trợ cá nhân, không thay thế xác nhận chính thức của cơ quan quản lý.</div>
+    <span id="foot-name"></span>
+    <span id="foot-date"></span>
   </footer>
-</div>
 
-<script>
-const KEY='cme.v1';
-const $=s=>document.querySelector(s);
-const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
-const fmt=d=>d.toLocaleDateString('vi-VN');
-const num=n=>(Math.round(n*100)/100).toString().replace('.',',');
-const pd=s=>{const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)};
-const DEF_TYPES=[
-  {id:'course',name:'Khóa đào tạo, bồi dưỡng ngắn hạn',factor:1},
-  {id:'conf',name:'Hội nghị, hội thảo y khoa',factor:1},
-  {id:'write',name:'Biên soạn giáo trình, tài liệu',factor:1},
-  {id:'research',name:'Nghiên cứu khoa học, giảng dạy y khoa',factor:1},
-  {id:'self',name:'Tự cập nhật kiến thức và hình thức khác',factor:1}
-];
-let state=load(), editId=null, q='';
-function load(){
-  try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&Array.isArray(s.items)){s.meta=s.meta||{};s.deleted=s.deleted||{};return s}}catch(e){}
-  return{profile:{name:'',license:'',cycleStart:'',required:120},types:DEF_TYPES.map(t=>({...t})),items:[],deleted:{},meta:{lastBackup:null}};
-}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){alert('Không lưu được dữ liệu: '+e.message)}}
-
-/* ---------- IndexedDB cho file scan ---------- */
-const idb=()=>new Promise((res,rej)=>{const r=indexedDB.open('cme-files',1);r.onupgradeneeded=()=>r.result.createObjectStore('files',{keyPath:'id'});r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
-const tx=async(mode,fn)=>{const d=await idb();return new Promise((res,rej)=>{const t=d.transaction('files',mode);const r=fn(t.objectStore('files'));t.oncomplete=()=>res(r&&r.result);t.onerror=()=>rej(t.error)})};
-const fput=rec=>tx('readwrite',s=>s.put(rec));
-const fget=id=>tx('readonly',s=>s.get(id));
-const fdel=id=>tx('readwrite',s=>s.delete(id));
-const fall=()=>tx('readonly',s=>s.getAll());
-const fclear=()=>tx('readwrite',s=>s.clear());
-const toDataURL=b=>new Promise(r=>{const f=new FileReader();f.onload=()=>r(f.result);f.readAsDataURL(b)});
-
-/* ---------- Tính toán ---------- */
-function cycle(){
-  const s=state.profile.cycleStart;if(!s)return null;
-  const a=pd(s),b=new Date(a.getFullYear()+5,a.getMonth(),a.getDate());b.setDate(b.getDate()-1);
-  return{start:a,end:b};
-}
-const inCycle=(it,c)=>c&&pd(it.date)>=c.start&&pd(it.date)<=c.end;
-
-/* ---------- Render ---------- */
-function renderDash(){
-  const c=cycle(),req=Number(state.profile.required)||120;
-  const el=$('#dash');
-  if(!c){el.innerHTML='<h2>Tổng quan</h2><div class="alert warn">Hãy nhập ngày bắt đầu chu kỳ 5 năm ở mục <a href="#profile" data-open="profile">Hồ sơ &amp; chu kỳ 5 năm</a> để ứng dụng tự tính.</div>';return}
-  const counted=state.items.filter(i=>inCycle(i,c));
-  const total=counted.reduce((s,i)=>s+Number(i.credits||0),0);
-  const remain=Math.max(0,req-total);
-  const pct=Math.min(100,total/req*100);
-  const today=new Date();today.setHours(0,0,0,0);
-  const daysLeft=Math.ceil((c.end-today)/864e5);
-  let msg;
-  if(total>=req)msg='<div class="alert ok">Đã đủ số giờ tín chỉ yêu cầu trong chu kỳ này.</div>';
-  else if(daysLeft<0)msg='<div class="alert bad">Chu kỳ đã kết thúc nhưng còn thiếu '+num(remain)+' giờ tín chỉ.</div>';
-  else if(daysLeft<=180)msg='<div class="alert bad">Còn '+daysLeft+' ngày và còn thiếu '+num(remain)+' giờ tín chỉ (~'+num(remain/Math.max(1,daysLeft/30))+' giờ/tháng).</div>';
-  else msg='<div class="alert warn">Còn thiếu '+num(remain)+' giờ tín chỉ; cần trung bình ~'+num(remain/Math.max(1,daysLeft/30))+' giờ/tháng.</div>';
-  let yrs='';
-  for(let k=0;k<5;k++){
-    const a=new Date(c.start.getFullYear()+k,c.start.getMonth(),c.start.getDate());
-    const b=new Date(c.start.getFullYear()+k+1,c.start.getMonth(),c.start.getDate());b.setDate(b.getDate()-1);
-    const sum=counted.filter(i=>{const d=pd(i.date);return d>=a&&d<=b}).reduce((s,i)=>s+Number(i.credits||0),0);
-    yrs+='<div class="yr"><span>Năm '+(k+1)+' ('+fmt(a)+')</span><div class="bar"><i style="width:'+Math.min(100,sum/(req/5)*100)+'%"></i></div><span class="num">'+num(sum)+'</span></div>';
-  }
-  el.innerHTML='<h2>Tổng quan chu kỳ '+fmt(c.start)+' – '+fmt(c.end)+'</h2>'
-   +'<div class="stat"><div><b>'+num(total)+' / '+req+'</b><span>Giờ tín chỉ tích lũy</span></div><div><b>'+num(remain)+'</b><span>Còn thiếu</span></div><div><b>'+(daysLeft<0?'Hết hạn':daysLeft)+'</b><span>Ngày còn lại</span></div><div><b>'+counted.length+'</b><span>Hoạt động trong chu kỳ</span></div></div>'
-   +'<div class="bar"><i style="width:'+pct+'%"></i></div>'+msg
-   +'<div style="margin-top:14px"><label>Phân bổ theo năm (tham khảo mức đều ~'+num(req/5)+' giờ/năm)</label>'+yrs+'</div>';
-}
-function renderTable(){
-  const c=cycle(),kw=q.trim().toLowerCase();
-  const tn=id=>(state.types.find(t=>t.id===id)||{}).name||'—';
-  const rows=state.items.slice().sort((a,b)=>b.date.localeCompare(a.date))
-    .filter(i=>!kw||[i.title,i.org,i.orgCode,i.certNo,i.note,tn(i.typeId)].join(' ').toLowerCase().includes(kw));
-  $('#tb').innerHTML=rows.length?rows.map(i=>{
-    const out=c&&!inCycle(i,c);
-    return '<tr class="'+(out?'out':'')+'"><td>'+fmt(pd(i.date))+(out?'<br><span class="tag">ngoài chu kỳ</span>':'')+'</td>'
-     +'<td><b>'+esc(i.title)+'</b><br><span class="hint">'+esc(i.org)+(i.orgCode?' · Mã '+esc(i.orgCode):'')+(i.note?' · '+esc(i.note):'')+'</span></td>'
-     +'<td>'+esc(tn(i.typeId))+'</td><td class="num">'+num(i.amount)+'</td><td class="num">'+num(i.factor)+'</td><td class="num"><b>'+num(i.credits)+'</b></td>'
-     +'<td>'+esc(i.certNo)+(i.fileId?'<br><button class="sm" data-act="view" data-id="'+i.id+'">Xem file</button>':'')+'</td>'
-     +'<td class="num"><button class="sm" data-act="edit" data-id="'+i.id+'">Sửa</button> <button class="sm del" data-act="del" data-id="'+i.id+'">Xóa</button></td></tr>';
-  }).join(''):'<tr><td colspan="8" class="hint">Chưa có hoạt động nào.</td></tr>';
-}
-function renderTypes(){
-  $('#types').innerHTML=state.types.map(t=>'<div class="row" style="margin-bottom:6px"><input data-tid="'+t.id+'" data-f="name" value="'+esc(t.name)+'" style="flex:1;min-width:200px"><input data-tid="'+t.id+'" data-f="factor" type="number" step="0.01" min="0" value="'+t.factor+'" style="width:90px"><button class="sm del" data-tdel="'+t.id+'">Xóa</button></div>').join('');
-  const cur=$('#fType').value;
-  $('#fType').innerHTML=state.types.map(t=>'<option value="'+t.id+'">'+esc(t.name)+'</option>').join('');
-  if(cur&&state.types.some(t=>t.id===cur))$('#fType').value=cur;
-}
-function renderAll(){
-  $('#pName').value=state.profile.name||'';$('#pLic').value=state.profile.license||'';
-  $('#pStart').value=state.profile.cycleStart||'';$('#pReq').value=state.profile.required||120;
-  renderTypes();renderDash();renderTable();syncFactor();renderBk();
-  $('#profile').open=!state.profile.cycleStart;
-  $('#guide').open=!state.profile.cycleStart&&!state.items.length;
-}
-
-/* ---------- Form ---------- */
-function calcCred(){const v=(Number($('#fAmt').value)||0)*(Number($('#fFac').value)||0);$('#fCred').value=num(v)}
-function syncFactor(){const t=state.types.find(t=>t.id===$('#fType').value);if(t&&!editId)$('#fFac').value=t.factor;calcCred()}
-function resetForm(){editId=null;$('#f').reset();$('#formTitle').textContent='Thêm hoạt động CME';$('#fSubmit').textContent='Lưu hoạt động';$('#fCancel').classList.add('hide');$('#fType').value=state.types[0]?state.types[0].id:'';syncFactor()}
-$('#fType').onchange=()=>{const t=state.types.find(t=>t.id===$('#fType').value);if(t)$('#fFac').value=t.factor;calcCred()};
-$('#fAmt').oninput=calcCred;$('#fFac').oninput=calcCred;
-$('#fCancel').onclick=resetForm;
-$('#f').onsubmit=async e=>{
-  e.preventDefault();
-  const file=$('#fFile').files[0];
-  if(file&&file.size>8*1024*1024){alert('File quá lớn (tối đa 8 MB).');return}
-  const old=editId?state.items.find(i=>i.id===editId):null;
-  const amount=Number($('#fAmt').value)||0,factor=Number($('#fFac').value)||0;
-  const it={id:old?old.id:uid(),date:$('#fDate').value,title:$('#fTitle').value.trim(),org:$('#fOrg').value.trim(),orgCode:$('#fCode').value.trim(),
-    typeId:$('#fType').value,amount,factor,credits:Math.round(amount*factor*100)/100,certNo:$('#fCert').value.trim(),note:$('#fNote').value.trim(),
-    fileId:old?old.fileId:null,fileName:old?old.fileName:null,updatedAt:Date.now()};
-  try{
-    if(file){if(it.fileId)await fdel(it.fileId);it.fileId=uid();it.fileName=file.name;await fput({id:it.fileId,name:file.name,type:file.type,blob:file})}
-  }catch(err){alert('Không lưu được file đính kèm: '+err.message)}
-  if(old)Object.assign(old,it);else state.items.push(it);
-  save();resetForm();renderDash();renderTable();renderBk();
-};
-$('#tb').onclick=async e=>{
-  const b=e.target.closest('button');if(!b)return;
-  const it=state.items.find(i=>i.id===b.dataset.id);if(!it)return;
-  if(b.dataset.act==='del'){
-    if(!confirm('Xóa hoạt động "'+it.title+'"?'))return;
-    if(it.fileId)try{await fdel(it.fileId)}catch(_){}
-    state.items=state.items.filter(i=>i!==it);state.deleted=state.deleted||{};state.deleted[it.id]=Date.now();save();renderDash();renderTable();renderBk();
-  }else if(b.dataset.act==='edit'){
-    editId=it.id;$('#fDate').value=it.date;$('#fTitle').value=it.title;$('#fOrg').value=it.org;$('#fCode').value=it.orgCode;
-    $('#fType').value=it.typeId;$('#fAmt').value=it.amount;$('#fFac').value=it.factor;$('#fCert').value=it.certNo;$('#fNote').value=it.note;
-    $('#fFile').value='';calcCred();$('#formTitle').textContent='Sửa hoạt động'+(it.fileName?' (đã có file: '+it.fileName+'; chọn file mới để thay)':'');
-    $('#fSubmit').textContent='Cập nhật';$('#fCancel').classList.remove('hide');$('#f').scrollIntoView({behavior:'smooth'});
-  }else if(b.dataset.act==='view'){
-    const r=await fget(it.fileId);if(!r){alert('Không tìm thấy file (có thể đã bị xóa khỏi trình duyệt).');return}
-    window.open(URL.createObjectURL(r.blob),'_blank');
-  }
-};
-$('#q').oninput=e=>{q=e.target.value;renderTable()};
-
-/* ---------- Hồ sơ & hệ số ---------- */
-[['#pName','name'],['#pLic','license'],['#pStart','cycleStart'],['#pReq','required']].forEach(([s,k])=>{
-  $(s).oninput=()=>{state.profile[k]=$(s).value;save();renderDash();renderTable()};
-});
-$('#types').oninput=e=>{
-  const t=state.types.find(t=>t.id===e.target.dataset.tid);if(!t)return;
-  t[e.target.dataset.f]=e.target.dataset.f==='factor'?Number(e.target.value)||0:e.target.value;save();
-  const cur=$('#fType').value;$('#fType').innerHTML=state.types.map(t=>'<option value="'+t.id+'">'+esc(t.name)+'</option>').join('');$('#fType').value=cur;
-};
-$('#types').onclick=e=>{
-  const id=e.target.dataset.tdel;if(!id)return;
-  if(state.items.some(i=>i.typeId===id)){alert('Hình thức này đang được dùng bởi hoạt động đã lưu, không thể xóa.');return}
-  state.types=state.types.filter(t=>t.id!==id);save();renderTypes();syncFactor();
-};
-$('#addType').onclick=()=>{state.types.push({id:uid(),name:'Hình thức mới',factor:1});save();renderTypes()};
-
-/* XLSX-START */
-const CRCT=(()=>{const t=[];for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
-function crc32(b){let c=0xFFFFFFFF;for(let i=0;i<b.length;i++)c=CRCT[(c^b[i])&255]^(c>>>8);return(c^0xFFFFFFFF)>>>0}
-function zipStore(files){
-  const enc=new TextEncoder(),parts=[],cen=[];let off=0;
-  const u16=n=>[n&255,(n>>8)&255],u32=n=>[n&255,(n>>8)&255,(n>>16)&255,(n>>>24)&255];
-  for(const f of files){
-    const nm=enc.encode(f.name),crc=crc32(f.data),sz=f.data.length;
-    const lh=new Uint8Array([0x50,0x4b,3,4,...u16(20),...u16(0x0800),...u16(0),...u16(0),...u16(0x21),...u32(crc),...u32(sz),...u32(sz),...u16(nm.length),...u16(0)]);
-    parts.push(lh,nm,f.data);cen.push({nm,crc,sz,off});off+=lh.length+nm.length+sz;
-  }
-  let csz=0;const cp=[];
-  for(const c of cen){
-    const h=new Uint8Array([0x50,0x4b,1,2,...u16(20),...u16(20),...u16(0x0800),...u16(0),...u16(0),...u16(0x21),...u32(c.crc),...u32(c.sz),...u32(c.sz),...u16(c.nm.length),...u16(0),...u16(0),...u16(0),...u16(0),...u32(0),...u32(c.off)]);
-    cp.push(h,c.nm);csz+=h.length+c.nm.length;
-  }
-  const end=new Uint8Array([0x50,0x4b,5,6,0,0,0,0,...u16(cen.length),...u16(cen.length),...u32(csz),...u32(off),0,0]);
-  return new Blob([...parts,...cp,end],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
-}
-const xe=s=>String(s==null?'':s).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const colL=i=>{let s='';i++;while(i>0){const m=(i-1)%26;s=String.fromCharCode(65+m)+s;i=Math.floor((i-1)/26)}return s};
-const serial=d=>Math.round((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-Date.UTC(1899,11,30))/864e5);
-function cellXml(r,c,x){
-  if(!x||(x.v==null&&!x.f))return '';
-  const ref=colL(c)+r,s=x.s?' s="'+x.s+'"':'';
-  if(x.f)return '<c r="'+ref+'"'+s+'><f>'+xe(x.f)+'</f><v>'+x.v+'</v></c>';
-  if(typeof x.v==='number')return '<c r="'+ref+'"'+s+'><v>'+x.v+'</v></c>';
-  if(x.v==='')return '';
-  return '<c r="'+ref+'"'+s+' t="inlineStr"><is><t xml:space="preserve">'+xe(x.v)+'</t></is></c>';
-}
-function sheetXml(rows,widths,o){
-  o=o||{};
-  let x='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">';
-  if(o.freeze)x+='<sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>';
-  x+='<cols>'+widths.map((w,i)=>'<col min="'+(i+1)+'" max="'+(i+1)+'" width="'+w+'" customWidth="1"/>').join('')+'</cols><sheetData>';
-  rows.forEach((row,ri)=>{x+='<row r="'+(ri+1)+'">'+row.map((c,ci)=>cellXml(ri+1,ci,c)).join('')+'</row>'});
-  x+='</sheetData>';
-  if(o.filter)x+='<autoFilter ref="'+o.filter+'"/>';
-  return x+'</worksheet>';
-}
-function buildXlsx(st){
-  const c=st.profile.cycleStart?(()=>{const a=pd(st.profile.cycleStart),b=new Date(a.getFullYear()+5,a.getMonth(),a.getDate());b.setDate(b.getDate()-1);return{start:a,end:b}})():null;
-  const req=Number(st.profile.required)||120;
-  const tn=id=>(st.types.find(t=>t.id===id)||{}).name||'';
-  const items=st.items.slice().sort((a,b)=>a.date.localeCompare(b.date));
-  const n=items.length;
-  const H=['STT','Ngày hoàn thành','Tên khóa học / hội nghị','Đơn vị tổ chức','Mã cơ sở đào tạo','Hình thức','Số lượng','Hệ số quy đổi','Giờ tín chỉ','Số chứng nhận','Có file scan','Trong chu kỳ','Ghi chú'];
-  const r1=[H.map(h=>({v:h,s:1}))];
-  let total=0,cnt=0;
-  items.forEach((i,k)=>{
-    const r=k+2,d=pd(i.date),inC=c?(d>=c.start&&d<=c.end):false;
-    const cr=Math.round((Number(i.amount)||0)*(Number(i.factor)||0)*100)/100;
-    if(inC){total+=cr;cnt++}
-    r1.push([{v:k+1},{v:serial(d),s:2},{v:i.title},{v:i.org},{v:i.orgCode},{v:tn(i.typeId)},{v:Number(i.amount)||0,s:3},{v:Number(i.factor)||0,s:3},{v:cr,s:3,f:'G'+r+'*H'+r},{v:i.certNo},{v:i.fileId?'Có':'Không'},{v:c?(inC?'Có':'Không'):''},{v:i.note}]);
-  });
-  total=Math.round(total*100)/100;
-  if(n>0)r1.push([null,null,{v:'Tổng giờ tín chỉ trong chu kỳ',s:4},null,null,null,null,null,{v:total,s:5,f:'SUMIFS(I2:I'+(n+1)+',L2:L'+(n+1)+',"Có")'}]);
-  const s1=sheetXml(r1,[6,14,38,28,16,34,10,12,12,18,12,13,30],{freeze:true,filter:n>0?'A1:M'+(n+1):null});
-  const miss=Math.max(0,Math.round((req-total)*100)/100);
-  const today=new Date();
-  const r2=[[{v:'Chỉ tiêu',s:1},{v:'Giá trị',s:1}],
-    [{v:'Họ tên'},{v:st.profile.name||''}],
-    [{v:'Số chứng chỉ / giấy phép hành nghề'},{v:st.profile.license||''}],
-    [{v:'Bắt đầu chu kỳ'},c?{v:serial(c.start),s:2}:{v:''}],
-    [{v:'Kết thúc chu kỳ'},c?{v:serial(c.end),s:2}:{v:''}],
-    [{v:'Giờ tín chỉ yêu cầu'},{v:req,s:3}],
-    [{v:'Giờ tín chỉ tích lũy trong chu kỳ'},n>0?{v:total,s:3,f:"'Hoạt động'!I"+(n+2)}:{v:0,s:3}],
-    [{v:'Còn thiếu'},{v:miss,s:3,f:'MAX(0,B6-B7)'}],
-    [{v:'Số hoạt động trong chu kỳ'},{v:cnt}],
-    [{v:'Ngày xuất file'},{v:serial(today),s:2}],
-    [{v:'Công cụ'},{v:'CME Tracker'}],
-    [{v:'Tác giả / Bản quyền'},{v:'© 2026 Bá Tử Kinh | Tường Vi. Bảo lưu mọi quyền.'}]];
-  const s2=sheetXml(r2,[38,34]);
-  const r3=[[{v:'Hình thức',s:1},{v:'Hệ số quy đổi',s:1}],...st.types.map(t=>[{v:t.name},{v:Number(t.factor)||0,s:3}])];
-  const s3=sheetXml(r3,[48,16]);
-  const enc=new TextEncoder(),X='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
-  const styles=X+'<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><numFmts count="1"><numFmt numFmtId="164" formatCode="dd/mm/yyyy"/></numFmts><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFDCE6F5"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="6"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment wrapText="1" vertical="center"/></xf><xf numFmtId="164" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/><xf numFmtId="2" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="2" fontId="1" fillId="0" borderId="0" xfId="0" applyNumberFormat="1" applyFont="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>';
-  const files=[
-    ['[Content_Types].xml',X+'<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet3.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>'],
-    ['_rels/.rels',X+'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>'],
-    ['xl/workbook.xml',X+'<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Hoạt động" sheetId="1" r:id="rId1"/><sheet name="Tổng hợp" sheetId="2" r:id="rId2"/><sheet name="Hệ số quy đổi" sheetId="3" r:id="rId3"/></sheets></workbook>'],
-    ['xl/_rels/workbook.xml.rels',X+'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet2.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet3.xml"/><Relationship Id="rId4" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>'],
-    ['xl/styles.xml',styles],['xl/worksheets/sheet1.xml',s1],['xl/worksheets/sheet2.xml',s2],['xl/worksheets/sheet3.xml',s3]
-  ].map(([name,txt])=>({name,data:enc.encode(txt)}));
-  return zipStore(files);
-}
-/* XLSX-END */
-$('#exXlsx').onclick=()=>{
-  if(!state.items.length){alert('Chưa có hoạt động nào để xuất.');return}
-  download('cme-'+new Date().toISOString().slice(0,10)+'.xlsx',buildXlsx(state));
-};
-
-/* ---------- Sao lưu ---------- */
-const download=(name,blob)=>{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
-$('#exJson').onclick=async()=>{
-  const files=[];
-  try{for(const f of await fall())files.push({id:f.id,name:f.name,type:f.type,data:await toDataURL(f.blob)})}catch(_){}
-  state.meta=Object.assign({},state.meta,{lastBackup:new Date().toISOString()});save();renderBk();
-  download('cme-backup-'+new Date().toISOString().slice(0,10)+'.json',new Blob([JSON.stringify({version:1,state,files})],{type:'application/json'}));
-};
-$('#exCsv').onclick=()=>{
-  const tn=id=>(state.types.find(t=>t.id===id)||{}).name||'';
-  const cell=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
-  const head=['Ngày','Hoạt động','Đơn vị','Mã cơ sở','Hình thức','Số lượng','Hệ số','Giờ tín chỉ','Số chứng nhận','Ghi chú'];
-  const rows=state.items.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(i=>[i.date,i.title,i.org,i.orgCode,tn(i.typeId),i.amount,i.factor,i.credits,i.certNo,i.note]);
-  download('cme.csv',new Blob(['\ufeff'+[head,...rows].map(r=>r.map(cell).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'}));
-};
-/* MERGE-START */
-const normKey=i=>[i.date,String(i.title||'').trim().toLowerCase(),Number(i.amount)||0].join('|');
-function mergeStates(L,R){
-  const st=JSON.parse(JSON.stringify(L));
-  st.deleted=Object.assign({},L.deleted||{});
-  st.meta=st.meta||{};
-  const stats={added:0,updated:0,removed:0,dup:0,kept:0};
-  for(const [id,t] of Object.entries(R.deleted||{}))st.deleted[id]=Math.max(st.deleted[id]||0,Number(t)||0);
-  const byId=new Map(st.items.map(i=>[i.id,i]));
-  const keys=new Set(st.items.map(normKey));
-  for(const r of R.items||[]){
-    const l=byId.get(r.id),ts=Number(r.updatedAt)||0;
-    if(l){
-      if(ts>(Number(l.updatedAt)||0)){Object.assign(l,r);stats.updated++}else stats.kept++;
-    }else{
-      const del=st.deleted[r.id];
-      if(del&&del>=ts)continue;
-      if(keys.has(normKey(r))){stats.dup++;continue}
-      const c=Object.assign({},r);st.items.push(c);byId.set(c.id,c);keys.add(normKey(c));stats.added++;
-    }
-  }
-  st.items=st.items.filter(i=>{const del=st.deleted[i.id];if(del&&del>=(Number(i.updatedAt)||0)){stats.removed++;return false}return true});
-  for(const i of st.items){if(st.deleted[i.id]&&st.deleted[i.id]<(Number(i.updatedAt)||0))delete st.deleted[i.id]}
-  st.profile=Object.assign({},L.profile);
-  for(const k of ['name','license','cycleStart'])if(!st.profile[k]&&R.profile&&R.profile[k])st.profile[k]=R.profile[k];
-  const tid=new Set((st.types||[]).map(t=>t.id));st.types=st.types||[];
-  for(const t of R.types||[])if(!tid.has(t.id))st.types.push(Object.assign({},t));
-  return{state:st,stats};
-}
-/* MERGE-END */
-let impMode='merge';
-$('#imMerge').onclick=()=>{impMode='merge';$('#imFile').click()};
-$('#imReplace').onclick=()=>{impMode='replace';$('#imFile').click()};
-$('#imFile').onchange=async e=>{
-  const f=e.target.files[0];e.target.value='';if(!f)return;
-  try{
-    const d=JSON.parse(await f.text());
-    if(!d.state||!Array.isArray(d.state.items))throw new Error('File sao lưu không hợp lệ');
-    d.state.items=d.state.items.filter(i=>i&&typeof i.id==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(i.date||''));
-    d.state.deleted=d.state.deleted||{};d.state.meta=d.state.meta||{};d.state.profile=d.state.profile||{};d.state.types=d.state.types||[];
-    const files=Array.isArray(d.files)?d.files:[];
-    const putFile=async x=>fput({id:x.id,name:x.name,type:x.type,blob:await (await fetch(x.data)).blob()});
-    if(impMode==='replace'){
-      if(!confirm('Ghi đè sẽ XÓA dữ liệu hiện tại trên máy này và thay bằng file sao lưu. Tiếp tục?'))return;
-      await fclear();
-      for(const x of files)await putFile(x);
-      state=d.state;save();resetForm();renderAll();alert('Đã nhập xong (ghi đè).');
-    }else{
-      if(!confirm('Gộp dữ liệu từ file sao lưu vào máy này?'))return;
-      const r=mergeStates(state,d.state),ns=r.state,s=r.stats;
-      const used=new Set(ns.items.map(i=>i.fileId).filter(Boolean));
-      const have=new Set((await fall()).map(x=>x.id));
-      for(const x of files)if(used.has(x.id)&&!have.has(x.id))await putFile(x);
-      for(const x of await fall())if(!used.has(x.id))await fdel(x.id);
-      state=ns;save();resetForm();renderAll();
-      alert('Đã gộp xong:\n• Thêm mới: '+s.added+' hoạt động\n• Cập nhật bản mới hơn: '+s.updated+'\n• Xóa theo máy kia: '+s.removed+'\n• Bỏ qua do trùng nội dung: '+s.dup+'\nHồ sơ và hệ số quy đổi giữ theo máy này (chỉ điền chỗ trống).');
-    }
-  }catch(err){alert('Lỗi: '+err.message)}
-};
-$('#wipe').onclick=async()=>{
-  if(!confirm('Xóa TOÀN BỘ dữ liệu và file đính kèm trên trình duyệt này?'))return;
-  try{await fclear()}catch(_){}
-  localStorage.removeItem(KEY);state=load();resetForm();renderAll();
-};
-
-/* ---------- Cảnh báo sao lưu, điều hướng, ngoại tuyến, cài đặt ứng dụng ---------- */
-function renderBk(){
-  const last=state.meta&&state.meta.lastBackup;
-  let html='',info='Bạn chưa từng xuất sao lưu JSON trên thiết bị này.';
-  if(last){const d=new Date(last);info='Sao lưu JSON gần nhất: '+fmt(d)+' '+d.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'})}
-  if(state.items.length){
-    const days=last?Math.floor((Date.now()-new Date(last))/864e5):null;
-    if(!last)html='<div class="alert bad">Bạn đã nhập dữ liệu nhưng <b>chưa sao lưu lần nào</b>. Hãy vào mục <a href="#backupCard">Sao lưu</a> và bấm “Xuất sao lưu (JSON)”.</div>';
-    else if(days>=30)html='<div class="alert warn">Lần sao lưu gần nhất cách đây <b>'+days+' ngày</b>. Nên sao lưu lại tại mục <a href="#backupCard">Sao lưu</a>.</div>';
-  }
-  $('#bkWarn').innerHTML=html;$('#bkLast').textContent=info;
-}
-document.addEventListener('click',e=>{const a=e.target.closest('a[data-open]');if(a){const d=document.getElementById(a.dataset.open);if(d)d.open=true}});
-try{if(localStorage.getItem('cme.warnSeen')==='1')$('#warn').open=false}catch(_){}
-$('#warn>summary').addEventListener('click',()=>{try{localStorage.setItem('cme.warnSeen',$('#warn').open?'1':'0')}catch(_){}});
-function netState(){const on=navigator.onLine,t=$('#net');t.textContent=on?'Trực tuyến':'Ngoại tuyến – dữ liệu vẫn lưu trên máy';t.classList.toggle('net-off',!on)}
-addEventListener('online',netState);addEventListener('offline',netState);netState();
-let deferredInstall=null;
-addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;$('#installBtn').classList.remove('hide')});
-$('#installBtn').onclick=async()=>{if(!deferredInstall)return;deferredInstall.prompt();try{await deferredInstall.userChoice}catch(_){}deferredInstall=null;$('#installBtn').classList.add('hide')};
-addEventListener('appinstalled',()=>$('#installBtn').classList.add('hide'));
-if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
-try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(_){}
-
-renderAll();resetForm();
-</script>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
