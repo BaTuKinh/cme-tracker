@@ -1,9 +1,16 @@
 <!doctype html>
+<!--
+  CME Tracker – theo dõi giờ tín chỉ cập nhật kiến thức y khoa liên tục
+  Tác giả / Bản quyền: © 2026 Bá Tử Kinh | Tường Vi. Bảo lưu mọi quyền.
+-->
 <html lang="vi">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CME Tracker – Quản lý giờ tín chỉ</title>
+<meta name="author" content="Bá Tử Kinh | Tường Vi">
+<meta name="copyright" content="© 2026 Bá Tử Kinh | Tường Vi. Bảo lưu mọi quyền.">
+<meta name="description" content="CME Tracker: lưu chứng nhận và tự tính giờ tín chỉ cập nhật kiến thức y khoa liên tục.">
 <style>
 :root{--bg:#f6f7f9;--card:#fff;--tx:#1b2430;--mut:#6b7686;--bd:#dde2e9;--pri:#0f6fde;--ok:#1a9d57;--warn:#d98a00;--bad:#d8392f}
 @media (prefers-color-scheme:dark){:root{--bg:#12161c;--card:#1b222b;--tx:#e8edf3;--mut:#93a0b1;--bd:#2c3743;--pri:#4b9bff;--ok:#3ec27c;--warn:#f0b13a;--bad:#ff6a5f}}
@@ -42,6 +49,8 @@ tr.out{opacity:.5}
 .yr{display:grid;grid-template-columns:150px 1fr 60px;gap:8px;align-items:center;font-size:13px;margin:4px 0}
 .hint{font-size:12px;color:var(--mut);margin-top:6px}
 .hide{display:none}
+footer{text-align:center;color:var(--mut);font-size:12.5px;padding:8px 0 24px}
+footer b{color:var(--tx)}
 </style>
 </head>
 <body>
@@ -107,6 +116,7 @@ tr.out{opacity:.5}
     <h2>Sao lưu &amp; khôi phục</h2>
     <div class="row">
       <button id="exJson">Xuất sao lưu (JSON, kèm file scan)</button>
+      <button id="exXlsx" class="pri">Xuất Excel (.xlsx)</button>
       <button id="exCsv">Xuất bảng (CSV)</button>
       <button id="imBtn">Nhập sao lưu…</button>
       <input id="imFile" type="file" accept="application/json" class="hide">
@@ -114,6 +124,10 @@ tr.out{opacity:.5}
     </div>
     <div class="hint">Dữ liệu nằm trong trình duyệt/thiết bị này. Xóa dữ liệu trình duyệt sẽ mất dữ liệu – hãy xuất sao lưu định kỳ.</div>
   </div>
+  <footer>
+    <div>CME Tracker · Tác giả: <b>Bá Tử Kinh | Tường Vi</b></div>
+    <div>© 2026 Bá Tử Kinh | Tường Vi. Bảo lưu mọi quyền. Công cụ hỗ trợ cá nhân, không thay thế xác nhận chính thức của cơ quan quản lý.</div>
+  </footer>
 </div>
 
 <script>
@@ -266,6 +280,98 @@ $('#types').onclick=e=>{
   state.types=state.types.filter(t=>t.id!==id);save();renderTypes();syncFactor();
 };
 $('#addType').onclick=()=>{state.types.push({id:uid(),name:'Hình thức mới',factor:1});save();renderTypes()};
+
+/* XLSX-START */
+const CRCT=(()=>{const t=[];for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
+function crc32(b){let c=0xFFFFFFFF;for(let i=0;i<b.length;i++)c=CRCT[(c^b[i])&255]^(c>>>8);return(c^0xFFFFFFFF)>>>0}
+function zipStore(files){
+  const enc=new TextEncoder(),parts=[],cen=[];let off=0;
+  const u16=n=>[n&255,(n>>8)&255],u32=n=>[n&255,(n>>8)&255,(n>>16)&255,(n>>>24)&255];
+  for(const f of files){
+    const nm=enc.encode(f.name),crc=crc32(f.data),sz=f.data.length;
+    const lh=new Uint8Array([0x50,0x4b,3,4,...u16(20),...u16(0x0800),...u16(0),...u16(0),...u16(0x21),...u32(crc),...u32(sz),...u32(sz),...u16(nm.length),...u16(0)]);
+    parts.push(lh,nm,f.data);cen.push({nm,crc,sz,off});off+=lh.length+nm.length+sz;
+  }
+  let csz=0;const cp=[];
+  for(const c of cen){
+    const h=new Uint8Array([0x50,0x4b,1,2,...u16(20),...u16(20),...u16(0x0800),...u16(0),...u16(0),...u16(0x21),...u32(c.crc),...u32(c.sz),...u32(c.sz),...u16(c.nm.length),...u16(0),...u16(0),...u16(0),...u16(0),...u32(0),...u32(c.off)]);
+    cp.push(h,c.nm);csz+=h.length+c.nm.length;
+  }
+  const end=new Uint8Array([0x50,0x4b,5,6,0,0,0,0,...u16(cen.length),...u16(cen.length),...u32(csz),...u32(off),0,0]);
+  return new Blob([...parts,...cp,end],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+}
+const xe=s=>String(s==null?'':s).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const colL=i=>{let s='';i++;while(i>0){const m=(i-1)%26;s=String.fromCharCode(65+m)+s;i=Math.floor((i-1)/26)}return s};
+const serial=d=>Math.round((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-Date.UTC(1899,11,30))/864e5);
+function cellXml(r,c,x){
+  if(!x||(x.v==null&&!x.f))return '';
+  const ref=colL(c)+r,s=x.s?' s="'+x.s+'"':'';
+  if(x.f)return '<c r="'+ref+'"'+s+'><f>'+xe(x.f)+'</f><v>'+x.v+'</v></c>';
+  if(typeof x.v==='number')return '<c r="'+ref+'"'+s+'><v>'+x.v+'</v></c>';
+  if(x.v==='')return '';
+  return '<c r="'+ref+'"'+s+' t="inlineStr"><is><t xml:space="preserve">'+xe(x.v)+'</t></is></c>';
+}
+function sheetXml(rows,widths,o){
+  o=o||{};
+  let x='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">';
+  if(o.freeze)x+='<sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>';
+  x+='<cols>'+widths.map((w,i)=>'<col min="'+(i+1)+'" max="'+(i+1)+'" width="'+w+'" customWidth="1"/>').join('')+'</cols><sheetData>';
+  rows.forEach((row,ri)=>{x+='<row r="'+(ri+1)+'">'+row.map((c,ci)=>cellXml(ri+1,ci,c)).join('')+'</row>'});
+  x+='</sheetData>';
+  if(o.filter)x+='<autoFilter ref="'+o.filter+'"/>';
+  return x+'</worksheet>';
+}
+function buildXlsx(st){
+  const c=st.profile.cycleStart?(()=>{const a=pd(st.profile.cycleStart),b=new Date(a.getFullYear()+5,a.getMonth(),a.getDate());b.setDate(b.getDate()-1);return{start:a,end:b}})():null;
+  const req=Number(st.profile.required)||120;
+  const tn=id=>(st.types.find(t=>t.id===id)||{}).name||'';
+  const items=st.items.slice().sort((a,b)=>a.date.localeCompare(b.date));
+  const n=items.length;
+  const H=['STT','Ngày hoàn thành','Tên khóa học / hội nghị','Đơn vị tổ chức','Mã cơ sở đào tạo','Hình thức','Số lượng','Hệ số quy đổi','Giờ tín chỉ','Số chứng nhận','Có file scan','Trong chu kỳ','Ghi chú'];
+  const r1=[H.map(h=>({v:h,s:1}))];
+  let total=0,cnt=0;
+  items.forEach((i,k)=>{
+    const r=k+2,d=pd(i.date),inC=c?(d>=c.start&&d<=c.end):false;
+    const cr=Math.round((Number(i.amount)||0)*(Number(i.factor)||0)*100)/100;
+    if(inC){total+=cr;cnt++}
+    r1.push([{v:k+1},{v:serial(d),s:2},{v:i.title},{v:i.org},{v:i.orgCode},{v:tn(i.typeId)},{v:Number(i.amount)||0,s:3},{v:Number(i.factor)||0,s:3},{v:cr,s:3,f:'G'+r+'*H'+r},{v:i.certNo},{v:i.fileId?'Có':'Không'},{v:c?(inC?'Có':'Không'):''},{v:i.note}]);
+  });
+  total=Math.round(total*100)/100;
+  if(n>0)r1.push([null,null,{v:'Tổng giờ tín chỉ trong chu kỳ',s:4},null,null,null,null,null,{v:total,s:5,f:'SUMIFS(I2:I'+(n+1)+',L2:L'+(n+1)+',"Có")'}]);
+  const s1=sheetXml(r1,[6,14,38,28,16,34,10,12,12,18,12,13,30],{freeze:true,filter:n>0?'A1:M'+(n+1):null});
+  const miss=Math.max(0,Math.round((req-total)*100)/100);
+  const today=new Date();
+  const r2=[[{v:'Chỉ tiêu',s:1},{v:'Giá trị',s:1}],
+    [{v:'Họ tên'},{v:st.profile.name||''}],
+    [{v:'Số chứng chỉ / giấy phép hành nghề'},{v:st.profile.license||''}],
+    [{v:'Bắt đầu chu kỳ'},c?{v:serial(c.start),s:2}:{v:''}],
+    [{v:'Kết thúc chu kỳ'},c?{v:serial(c.end),s:2}:{v:''}],
+    [{v:'Giờ tín chỉ yêu cầu'},{v:req,s:3}],
+    [{v:'Giờ tín chỉ tích lũy trong chu kỳ'},n>0?{v:total,s:3,f:"'Hoạt động'!I"+(n+2)}:{v:0,s:3}],
+    [{v:'Còn thiếu'},{v:miss,s:3,f:'MAX(0,B6-B7)'}],
+    [{v:'Số hoạt động trong chu kỳ'},{v:cnt}],
+    [{v:'Ngày xuất file'},{v:serial(today),s:2}],
+    [{v:'Công cụ'},{v:'CME Tracker'}],
+    [{v:'Tác giả / Bản quyền'},{v:'© 2026 Bá Tử Kinh | Tường Vi. Bảo lưu mọi quyền.'}]];
+  const s2=sheetXml(r2,[38,34]);
+  const r3=[[{v:'Hình thức',s:1},{v:'Hệ số quy đổi',s:1}],...st.types.map(t=>[{v:t.name},{v:Number(t.factor)||0,s:3}])];
+  const s3=sheetXml(r3,[48,16]);
+  const enc=new TextEncoder(),X='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
+  const styles=X+'<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><numFmts count="1"><numFmt numFmtId="164" formatCode="dd/mm/yyyy"/></numFmts><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFDCE6F5"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="6"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment wrapText="1" vertical="center"/></xf><xf numFmtId="164" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/><xf numFmtId="2" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="2" fontId="1" fillId="0" borderId="0" xfId="0" applyNumberFormat="1" applyFont="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>';
+  const files=[
+    ['[Content_Types].xml',X+'<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet3.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>'],
+    ['_rels/.rels',X+'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>'],
+    ['xl/workbook.xml',X+'<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Hoạt động" sheetId="1" r:id="rId1"/><sheet name="Tổng hợp" sheetId="2" r:id="rId2"/><sheet name="Hệ số quy đổi" sheetId="3" r:id="rId3"/></sheets></workbook>'],
+    ['xl/_rels/workbook.xml.rels',X+'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet2.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet3.xml"/><Relationship Id="rId4" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>'],
+    ['xl/styles.xml',styles],['xl/worksheets/sheet1.xml',s1],['xl/worksheets/sheet2.xml',s2],['xl/worksheets/sheet3.xml',s3]
+  ].map(([name,txt])=>({name,data:enc.encode(txt)}));
+  return zipStore(files);
+}
+/* XLSX-END */
+$('#exXlsx').onclick=()=>{
+  if(!state.items.length){alert('Chưa có hoạt động nào để xuất.');return}
+  download('cme-'+new Date().toISOString().slice(0,10)+'.xlsx',buildXlsx(state));
+};
 
 /* ---------- Sao lưu ---------- */
 const download=(name,blob)=>{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
