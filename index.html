@@ -145,6 +145,40 @@ button.pri.big{min-height:46px;padding:0 26px;font-size:16px;font-weight:600}
 .modal-box iframe{width:100%;height:65vh;border:1px solid var(--bd);border-radius:8px;margin-top:10px}
 .btn{display:inline-block;padding:8px 14px;border-radius:8px;border:1px solid var(--bd);background:var(--card);color:var(--tx);text-decoration:none;font:inherit;cursor:pointer}
 .tag.warn{color:var(--warn);border-color:var(--warn)}
+.chip-grp{flex-basis:100%;font-size:12px;font-weight:600;color:var(--mut);margin-top:6px}
+.chip-grp:first-child{margin-top:0}
+.chip.sm{min-height:34px;padding:4px 12px;font-size:13px}
+.st{display:inline-block;font-size:12px;font-weight:600;padding:1px 8px;border-radius:999px;line-height:1.5}
+.st-ok{background:rgba(26,157,87,.14);color:var(--ok)}
+.st-warn{background:rgba(217,138,0,.16);color:var(--warn)}
+.st-bad{background:rgba(216,57,47,.14);color:var(--bad)}
+.st-na{background:var(--bg);color:var(--mut);border:1px solid var(--bd)}
+.lf{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px 12px;margin-bottom:8px}
+@media(max-width:600px){.lf{grid-template-columns:1fr 1fr}.lf select{font-size:15px;padding:8px 8px}}
+.lf label{font-size:12.5px;color:var(--mut);font-weight:600;margin-bottom:3px}
+.lst-info{justify-content:space-between;margin-bottom:6px}
+tr.grp td{padding:14px 6px 6px;font-weight:700;font-size:13.5px;color:var(--pri);border-bottom:2px solid var(--bd)}
+tr.grp td span{font-weight:500;color:var(--mut)}
+@media(max-width:720px){tbody tr.grp{display:block;padding:10px 0 4px;border-bottom:0}}
+.docs-card{border-top:3px solid var(--ok)}
+.docs-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px 14px;flex-wrap:wrap;margin-bottom:12px}
+.docs-head h2{margin:0 0 2px}
+.docs-head .hint{margin:0}
+#docsAlert .alert{margin:0 0 12px}
+.docs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.doc{display:flex;flex-direction:column;gap:6px;padding:14px;border:1.5px solid var(--bd);border-radius:12px;background:var(--field);min-width:0}
+.doc.k-license{border-color:var(--pri)}
+.doc-k{font-size:11.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--pri)}
+.doc-t{font-size:16px;font-weight:700;line-height:1.3;overflow-wrap:anywhere;text-wrap:balance}
+.doc-m{display:flex;flex-direction:column;gap:2px;font-size:13px;color:var(--mut);overflow-wrap:anywhere}
+.doc-m b{color:var(--tx);font-weight:600}
+.doc .st{align-self:flex-start}
+.doc-act{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:auto;padding-top:8px}
+.doc-act button.pri{flex:1;min-width:130px}
+.docs-empty{grid-column:1/-1;padding:14px;border:1.5px dashed var(--fbd);border-radius:12px;color:var(--mut);font-size:14px}
+.docs-empty .row{margin-top:10px}
+.fld-main input{font-size:17px;font-weight:600;border-width:2px;padding:12px 14px;min-height:50px}
+@media(max-width:720px){tr.none td.c-cred b::after{content:""}}
 </style>
 </head>
 <body>
@@ -161,6 +195,7 @@ button.pri.big{min-height:46px;padding:0 26px;font-size:16px;font-weight:600}
   </header>
 
   <nav class="nav">
+    <a href="#docsCard">Hồ sơ quan trọng</a>
     <a href="#dash">Tổng quan</a>
     <a href="#addForm">Thêm hoạt động</a>
     <a href="#listCard">Danh sách</a>
@@ -169,16 +204,30 @@ button.pri.big{min-height:46px;padding:0 26px;font-size:16px;font-weight:600}
     <a href="#guide" data-open="guide">Hướng dẫn</a>
   </nav>
 
+  <section class="card docs-card" id="docsCard" aria-labelledby="docsT">
+    <div class="docs-head">
+      <div>
+        <h2 id="docsT">Hồ sơ quan trọng</h2>
+        <p class="hint">Chứng chỉ hành nghề, bằng cấp và giấy tờ cần xem thường xuyên. Bấm “Xem bản scan” để mở ngay.</p>
+      </div>
+      <button type="button" id="docAdd" class="pri">+ Thêm hồ sơ</button>
+    </div>
+    <div id="docsAlert"></div>
+    <div class="docs-grid" id="docsList"></div>
+  </section>
+
   <details class="card notice" id="warn" open>
     <summary>Lưu ý quan trọng</summary>
     <ul>
       <li><b>Giờ tín chỉ:</b> hãy nhập đúng số giờ do đơn vị cấp chứng nhận ghi (dòng “Quy đổi tương đương”). Chỉ chọn “Tự tính” khi chứng nhận không ghi; khi đó hệ số mặc định là 1 và bạn phải tự đối chiếu với <b>Phụ lục I Thông tư 32/2023/TT-BYT</b> ở mục <a href="#typesCard" data-open="typesCard">Hệ số quy đổi</a>.</li>
       <li><b>Dữ liệu chỉ nằm trên thiết bị này:</b> không có máy chủ và không đồng bộ giữa các máy. Xóa dữ liệu trình duyệt hoặc đổi máy sẽ mất dữ liệu nếu chưa <a href="#backupCard">sao lưu</a>.</li>
+      <li><b>Hồ sơ cá nhân:</b> mục <a href="#docsCard">Hồ sơ quan trọng</a> chứa ảnh scan chứng chỉ, bằng cấp. File sao lưu JSON cũng chứa các ảnh này, nên hãy cất kỹ và không gửi cho người không liên quan.</li>
       <li><b>Không phải xác nhận chính thức:</b> đây là công cụ hỗ trợ cá nhân; số liệu cuối cùng do cơ quan quản lý và nơi cấp chứng chỉ hành nghề xác nhận.</li>
     </ul>
   </details>
 
   <div id="bkWarn"></div>
+
 
   <details class="card" id="guide">
     <summary>Hướng dẫn sử dụng</summary>
@@ -189,6 +238,16 @@ button.pri.big{min-height:46px;padding:0 26px;font-size:16px;font-weight:600}
       <li>Xem <b>Tổng quan</b> để biết đã đủ giờ chưa, còn thiếu bao nhiêu và còn bao nhiêu ngày.</li>
       <li>Định kỳ bấm <b>Xuất sao lưu (JSON)</b>. Cần danh sách để nộp hồ sơ thì bấm <b>Xuất Excel</b>.</li>
     </ol>
+    <h3>Kỹ năng, đào tạo nội bộ (không có giờ tín chỉ)</h3>
+    <ul>
+      <li>Dùng cho tập huấn vận hành thiết bị, đào tạo quy trình mới (VD: ISO 15189:2022), đánh giá năng lực, huấn luyện kỹ năng ở bất kỳ khoa phòng nào. Trong biểu mẫu chọn nhóm <b>Kỹ năng, đào tạo nội bộ</b> (hoặc chọn <b>Không tính tín chỉ</b>).</li>
+      <li>Chỉ cần nội dung và ngày. Số chứng nhận, số lưu sổ, thời lượng, người đánh giá, kết quả và “Hiệu lực đến” đều là tùy chọn. Hoạt động này <b>không cộng</b> vào 120 giờ tín chỉ; nếu có “Hiệu lực đến”, app sẽ nhắc khi sắp cần đánh giá lại.</li>
+    </ul>
+    <h3>Hồ sơ quan trọng (chứng chỉ hành nghề, bằng cấp)</h3>
+    <ul>
+      <li>Nằm ngay đầu trang. Bấm <b>+ Thêm hồ sơ</b>, chọn loại, nhập số, nơi cấp, ngày cấp, thời hạn (nếu có) và đính kèm ảnh hoặc PDF. Giấy tờ hai mặt nên gộp thành một file PDF.</li>
+      <li>Hồ sơ có thời hạn sẽ báo <b>sắp hết hạn</b> khi còn không quá 90 ngày. Hồ sơ cũng được sao lưu, gộp giữa các máy và xuất ra Excel như hoạt động CME.</li>
+    </ul>
     <h3>Cài như ứng dụng và dùng khi mất mạng</h3>
     <ul>
       <li><b>Android (Chrome):</b> bấm nút “Cài đặt ứng dụng” ở đầu trang, hoặc menu ⋮ → “Cài đặt ứng dụng” / “Thêm vào màn hình chính”.</li>
@@ -220,7 +279,7 @@ button.pri.big{min-height:46px;padding:0 26px;font-size:16px;font-weight:600}
   <section class="card form-card" id="addForm" aria-labelledby="formTitle">
     <header class="form-head">
       <div>
-        <h2 id="formTitle">Thêm hoạt động CME</h2>
+        <h2 id="formTitle">Thêm hoạt động</h2>
         <p class="form-sub">Nhập theo giấy chứng nhận, từ trên xuống dưới. Ô có dấu <span class="req" aria-hidden="true">*</span> là bắt buộc.</p>
       </div>
       <span id="editBadge" class="tag hide">Đang sửa</span>
@@ -246,10 +305,11 @@ button.pri.big{min-height:46px;padding:0 26px;font-size:16px;font-weight:600}
       </section>
 
       <section class="step" aria-labelledby="s2">
-        <div class="step-h"><span class="step-n" aria-hidden="true">2</span><div><h3 id="s2">Giờ tín chỉ</h3><p>Ưu tiên số ghi ở dòng “Quy đổi tương đương”</p></div></div>
+        <div class="step-h"><span class="step-n" aria-hidden="true">2</span><div><h3 id="s2">Giờ tín chỉ</h3><p>Ưu tiên số ghi ở dòng “Quy đổi tương đương”. Kỹ năng, đào tạo nội bộ không có tín chỉ thì chọn “Không tính tín chỉ”</p></div></div>
         <div class="seg" role="radiogroup" aria-labelledby="s2">
           <label class="opt"><input type="radio" name="fMode" value="cert" checked><span>Theo chứng nhận<em>Khuyên dùng</em></span></label>
           <label class="opt"><input type="radio" name="fMode" value="calc"><span>Tự tính<em>Số tiết × hệ số</em></span></label>
+          <label class="opt"><input type="radio" name="fMode" value="none"><span>Không tính tín chỉ<em>Kỹ năng, đào tạo nội bộ</em></span></label>
         </div>
         <div id="boxCert" class="row-grid">
           <div class="fld c4"><label for="fCredIn">Số giờ ghi trên chứng nhận <span class="req" aria-hidden="true">*</span></label><div class="unit"><input id="fCredIn" type="number" min="0" step="0.25" inputmode="decimal" placeholder="3"><span>giờ tín chỉ</span></div></div>
@@ -259,10 +319,19 @@ button.pri.big{min-height:46px;padding:0 26px;font-size:16px;font-weight:600}
           <div class="fld c4"><label for="fFac">Hệ số quy đổi</label><input id="fFac" type="number" min="0" step="0.01" inputmode="decimal"><small>Đối chiếu Phụ lục I Thông tư 32/2023</small></div>
           <div class="fld c4"><label for="fCred">Giờ tín chỉ</label><div class="unit"><input id="fCred" readonly><span>giờ</span></div></div>
         </div>
+        <div id="boxNone" class="hide">
+          <p class="hint" style="margin:0 0 12px">Hoạt động này được lưu để quản lý hồ sơ năng lực và <b>không cộng</b> vào giờ tín chỉ. Các ô dưới đây đều không bắt buộc.</p>
+          <div class="row-grid">
+            <div class="fld c6"><label for="fTrainer">Người hướng dẫn / đánh giá</label><input id="fTrainer" placeholder="VD: Trưởng khoa, chuyên viên hãng"></div>
+            <div class="fld c3"><label for="fHours">Thời lượng</label><div class="unit"><input id="fHours" type="number" min="0" step="0.25" inputmode="decimal"><span>giờ học</span></div></div>
+            <div class="fld c3"><label for="fValid">Hiệu lực đến</label><input id="fValid" type="date"><small>Nếu cần đánh giá lại định kỳ</small></div>
+            <div class="fld c6"><label for="fResult">Kết quả đánh giá</label><input id="fResult" list="dlResult" placeholder="VD: Đạt"></div>
+          </div>
+        </div>
       </section>
 
       <section class="step" aria-labelledby="s3">
-        <div class="step-h"><span class="step-n" aria-hidden="true">3</span><div><h3 id="s3">Chứng nhận</h3><p>Nơi cấp và bản scan để đối chiếu khi cần</p></div></div>
+        <div class="step-h"><span class="step-n" aria-hidden="true">3</span><div><h3 id="s3">Chứng nhận, minh chứng</h3><p>Không có số hoặc không có chứng nhận thì để trống. Có biên bản, ảnh hay giấy xác nhận thì đính kèm</p></div></div>
         <div class="row-grid">
           <div class="fld c6"><label for="fIssuer">Đơn vị cấp chứng nhận</label><input id="fIssuer" list="dlIssuer" placeholder="VD: Đại học Y Dược TP. Hồ Chí Minh"></div>
           <div class="fld c6"><label for="fCert">Số chứng nhận</label><input id="fCert" placeholder="VD: 123456/A001/GCN-ABC"></div>
@@ -280,7 +349,7 @@ button.pri.big{min-height:46px;padding:0 26px;font-size:16px;font-weight:600}
         </div>
         <div class="fld"><label for="fNote">Ghi chú</label><textarea id="fNote" rows="2"></textarea></div>
       </section>
-      <datalist id="dlIssuer"></datalist><datalist id="dlOrg"></datalist>
+      <datalist id="dlIssuer"></datalist><datalist id="dlOrg"></datalist><datalist id="dlResult"><option value="Đạt"><option value="Đạt có điều kiện"><option value="Chưa đạt"><option value="Hoàn thành"></datalist>
 
       <div class="form-bar">
         <div class="pv" id="pv" aria-live="polite"></div>
@@ -295,8 +364,16 @@ button.pri.big{min-height:46px;padding:0 26px;font-size:16px;font-weight:600}
   <div class="card" id="listCard">
     <div class="row" style="justify-content:space-between;margin-bottom:10px">
       <h2 style="margin:0">Danh sách hoạt động</h2>
-      <input id="q" placeholder="Tìm kiếm..." style="max-width:240px">
+      <input id="q" type="search" placeholder="Tìm tên, số chứng nhận, đơn vị, năm…" style="max-width:340px" aria-label="Tìm kiếm hoạt động">
     </div>
+    <div id="fltBar" class="chips" style="margin-bottom:10px"></div>
+    <div class="lf">
+      <div><label for="sSort">Sắp xếp</label><select id="sSort"><option value="new">Mới nhất trước</option><option value="old">Cũ nhất trước</option><option value="az">Tên A → Z</option><option value="cred">Giờ tín chỉ nhiều nhất</option></select></div>
+      <div><label for="sYear">Năm</label><select id="sYear"></select></div>
+      <div><label for="sType">Hình thức</label><select id="sType"></select></div>
+      <div><label for="sStat">Tình trạng</label><select id="sStat"><option value="">Tất cả</option><option value="in">Trong chu kỳ hiện tại</option><option value="out">Ngoài chu kỳ</option><option value="file">Đã có bản scan</option><option value="nofile">Chưa có bản scan</option><option value="exp">Sắp hoặc đã hết hiệu lực</option></select></div>
+    </div>
+    <div class="row lst-info"><span id="lstInfo" class="hint" style="margin:0"></span><button type="button" id="lfClear" class="linkbtn hide" style="margin:0">Xóa bộ lọc</button></div>
     <div class="tbl"><table>
       <thead><tr><th>Ngày</th><th>Nội dung / hình thức</th><th class="num">Giờ TC</th><th>Chứng nhận</th><th></th></tr></thead>
       <tbody id="tb"></tbody>
@@ -307,7 +384,7 @@ button.pri.big{min-height:46px;padding:0 26px;font-size:16px;font-weight:600}
     <summary>Hệ số quy đổi (chỉ dùng khi chọn “Tự tính”)</summary>
     <p class="hint" style="margin-top:0">Bảng này chỉ dùng khi bạn chọn cách “Tự tính” giờ tín chỉ; nếu chứng nhận đã ghi sẵn giờ tín chỉ thì cứ nhập theo chứng nhận. Mặc định 1 tiết = 1 giờ tín chỉ cho khóa học ngắn hạn. Các hình thức khác (hội nghị, biên soạn tài liệu, nghiên cứu, giảng dạy, tự học) hãy nhập hệ số đúng theo <b>Phụ lục I Thông tư 32/2023/TT-BYT</b> – ứng dụng không tự điền để tránh sai.</p>
     <div id="types"></div>
-    <div class="row" style="margin-top:8px"><button type="button" id="addType" class="sm">+ Thêm hình thức</button></div>
+    <div class="row" style="margin-top:8px"><button type="button" id="addType" class="sm">+ Thêm hình thức có tín chỉ</button> <button type="button" id="addSkillType" class="sm">+ Thêm loại kỹ năng / đào tạo nội bộ</button></div>
   </details>
 
   <div class="card" id="backupCard">
@@ -324,6 +401,37 @@ button.pri.big{min-height:46px;padding:0 26px;font-size:16px;font-weight:600}
     <div class="hint">Dữ liệu nằm trong trình duyệt/thiết bị này. Xóa dữ liệu trình duyệt sẽ mất dữ liệu – hãy xuất sao lưu định kỳ. Trên iPhone/iPad, dữ liệu trong app đã cài và trong Safari có thể là hai kho riêng, nên hãy chọn một nơi dùng cố định.</div>
     <div class="hint"><b>Dùng cả máy tính và điện thoại:</b> xuất sao lưu JSON ở máy này, rồi bấm “Nhập &amp; gộp dữ liệu” ở máy kia (và ngược lại). Gộp sẽ thêm hoạt động mới, giữ bản sửa mới hơn, áp dụng cả việc xóa, bỏ qua mục trùng. “Ghi đè” thì thay hoàn toàn dữ liệu của máy này.</div>
     <div class="hint" id="bkLast"></div>
+  </div>
+  <div id="docModal" class="modal hide" role="dialog" aria-modal="true" aria-labelledby="docFormTitle">
+    <div class="modal-box">
+      <form id="docForm">
+        <div class="row" style="justify-content:space-between;margin-bottom:14px">
+          <h2 id="docFormTitle" style="margin:0">Thêm hồ sơ quan trọng</h2>
+          <button type="button" id="dClose" class="sm">Đóng</button>
+        </div>
+        <div class="fld"><span class="lbl" id="lblKind">Loại hồ sơ</span><div id="dKindChips" class="chips" role="group" aria-labelledby="lblKind"></div></div>
+        <div class="fld fld-main"><label for="dTitle">Tên giấy tờ <span class="req" aria-hidden="true">*</span></label><input id="dTitle" required></div>
+        <div class="row-grid">
+          <div class="fld c6"><label for="dNum">Số</label><input id="dNum" placeholder="Số chứng chỉ, số bằng, số vào sổ"></div>
+          <div class="fld c6"><label for="dIssuer">Nơi cấp</label><input id="dIssuer" placeholder="VD: Sở Y tế, Trường Đại học Y…"></div>
+          <div class="fld c6"><label for="dIssue">Ngày cấp</label><input id="dIssue" type="date"></div>
+          <div class="fld c6"><label for="dValid">Có giá trị đến</label><input id="dValid" type="date"><small>Để trống nếu giấy tờ không ghi thời hạn</small></div>
+        </div>
+        <div class="fld"><label for="dNote">Phạm vi hoạt động chuyên môn, ghi chú</label><textarea id="dNote" rows="2" placeholder="VD: Phạm vi hoạt động chuyên môn ghi trên chứng chỉ"></textarea></div>
+        <div class="fld">
+          <span class="lbl">Bản scan</span>
+          <label class="drop" for="dFile" id="dDrop">
+            <input id="dFile" type="file" accept="application/pdf,image/*" class="sr">
+            <span class="drop-thumb" id="dDropThumb" aria-hidden="true"></span>
+            <span class="drop-t"><b id="dDropMain">Chọn ảnh hoặc PDF</b><small id="dDropSub">Giấy tờ hai mặt nên gộp thành một file PDF. Tối đa 8 MB</small></span>
+          </label>
+        </div>
+        <div class="row" style="justify-content:flex-end;margin-top:6px">
+          <button type="button" id="dCancel">Hủy</button>
+          <button class="pri big" type="submit" id="dSubmit">Lưu hồ sơ</button>
+        </div>
+      </form>
+    </div>
   </div>
   <div id="viewer" class="modal hide" role="dialog" aria-modal="true" aria-label="Xem file đính kèm">
     <div class="modal-box">
@@ -353,18 +461,26 @@ const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const fmt=d=>d.toLocaleDateString('vi-VN');
 const num=n=>(Math.round(n*100)/100).toString().replace('.',',');
 const pd=s=>{const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)};
+const SKILL_TYPES=[
+  {id:'skill',name:'Kỹ năng, thao tác, vận hành thiết bị',factor:1,noCredit:true},
+  {id:'qms',name:'Quy trình, chất lượng, an toàn (VD: ISO 15189:2022)',factor:1,noCredit:true},
+  {id:'comp',name:'Đánh giá năng lực, chứng nhận nội bộ',factor:1,noCredit:true}
+];
 const DEF_TYPES=[
   {id:'course',name:'Khóa đào tạo, bồi dưỡng ngắn hạn',factor:1},
   {id:'conf',name:'Hội nghị, hội thảo, tọa đàm',factor:1},
   {id:'write',name:'Biên soạn giáo trình, tài liệu',factor:1},
   {id:'research',name:'Nghiên cứu khoa học, giảng dạy y khoa',factor:1},
-  {id:'self',name:'Tự cập nhật kiến thức và hình thức khác',factor:1}
+  {id:'self',name:'Tự cập nhật kiến thức và hình thức khác',factor:1},
+  ...SKILL_TYPES
 ];
 let state=load(), editId=null, q='';
 function load(){
-  try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&Array.isArray(s.items)){s.meta=s.meta||{};s.deleted=s.deleted||{};return s}}catch(e){}
-  return{profile:{name:'',license:'',cycleStart:'',required:120},types:DEF_TYPES.map(t=>({...t})),items:[],deleted:{},meta:{lastBackup:null}};
+  try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&Array.isArray(s.items)){s.meta=s.meta||{};s.deleted=s.deleted||{};s.docs=Array.isArray(s.docs)?s.docs:[];s.types=Array.isArray(s.types)?s.types:[];return ensureTypes(s)}}catch(e){}
+  return{profile:{name:'',license:'',cycleStart:'',required:120},types:DEF_TYPES.map(t=>({...t})),items:[],docs:[],deleted:{},meta:{lastBackup:null,typesV:2}};
 }
+/* Thêm các nhóm kỹ năng, đào tạo nội bộ cho dữ liệu cũ (một lần) */
+function ensureTypes(s){s.meta=s.meta||{};s.types=s.types||[];if(!(s.meta.typesV>=2)){const ids=new Set(s.types.map(t=>t.id));SKILL_TYPES.forEach(t=>{if(!ids.has(t.id))s.types.push({...t})});s.meta.typesV=2}return s}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){alert('Không lưu được dữ liệu: '+e.message)}}
 
 /* ---------- IndexedDB cho file scan ---------- */
@@ -382,7 +498,7 @@ const recBlob=r=>r.buf?new Blob([r.buf],{type:r.type||'application/octet-stream'
 const toDataURL=b=>new Promise((res,rej)=>{const f=new FileReader();f.onload=()=>res(f.result);f.onerror=()=>rej(f.error||new Error('Không mã hóa được file'));f.readAsDataURL(b)});
 const dataToBuf=s=>{const b=atob(String(s).split(',')[1]||'');const u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u.buffer};
 let haveFiles=null;
-async function refreshFiles(){try{haveFiles=new Set(await fkeys())}catch(_){haveFiles=null}renderTable()}
+async function refreshFiles(){try{haveFiles=new Set(await fkeys())}catch(_){haveFiles=null}renderTable();renderDocs()}
 
 /* ---------- Tính toán ---------- */
 function cycle(){
@@ -392,13 +508,19 @@ function cycle(){
 }
 const eff=i=>i.dateEnd||i.date;
 const inCycle=(it,c)=>c&&pd(eff(it))>=c.start&&pd(eff(it))<=c.end;
+function skillNote(){
+  const sk=state.items.filter(i=>i.mode==='none');if(!sk.length)return '';
+  const exp=sk.filter(i=>i.validUntil&&vstat(i.validUntil).d<=90);
+  return '<div class="hint" style="margin-top:12px">Kỹ năng, đào tạo nội bộ: <b>'+sk.length+'</b> hoạt động, không tính vào giờ tín chỉ.</div>'
+    +(exp.length?'<div class="alert '+(exp.some(i=>vstat(i.validUntil).d<0)?'bad':'warn')+'">'+exp.length+' kỹ năng sắp hết hoặc đã hết hiệu lực, cần đánh giá lại: '+exp.slice(0,3).map(i=>esc(i.title)).join('; ')+(exp.length>3?'…':'')+'.</div>':'');
+}
 
 /* ---------- Render ---------- */
 function renderDash(){
   const c=cycle(),req=Number(state.profile.required)||120;
   const el=$('#dash');
-  if(!c){el.innerHTML='<h2>Tổng quan</h2><div class="alert warn">Hãy nhập ngày bắt đầu chu kỳ 5 năm ở mục <a href="#profile" data-open="profile">Hồ sơ &amp; chu kỳ 5 năm</a> để ứng dụng tự tính.</div>';return}
-  const counted=state.items.filter(i=>inCycle(i,c));
+  if(!c){el.innerHTML='<h2>Tổng quan</h2><div class="alert warn">Hãy nhập ngày bắt đầu chu kỳ 5 năm ở mục <a href="#profile" data-open="profile">Hồ sơ &amp; chu kỳ 5 năm</a> để ứng dụng tự tính.</div>'+skillNote();return}
+  const counted=state.items.filter(i=>i.mode!=='none'&&inCycle(i,c));
   const total=counted.reduce((s,i)=>s+Number(i.credits||0),0);
   const remain=Math.max(0,req-total);
   const pct=Math.min(100,total/req*100);
@@ -419,32 +541,84 @@ function renderDash(){
   el.innerHTML='<h2>Tổng quan chu kỳ '+fmt(c.start)+' – '+fmt(c.end)+'</h2>'
    +'<div class="stat"><div><b>'+num(total)+' / '+req+'</b><span>Giờ tín chỉ tích lũy</span></div><div><b>'+num(remain)+'</b><span>Còn thiếu</span></div><div><b>'+(daysLeft<0?'Hết hạn':daysLeft)+'</b><span>Ngày còn lại</span></div><div><b>'+counted.length+'</b><span>Hoạt động trong chu kỳ</span></div></div>'
    +'<div class="bar"><i style="width:'+pct+'%"></i></div>'+msg
-   +'<div style="margin-top:14px"><label>Phân bổ theo năm (tham khảo mức đều ~'+num(req/5)+' giờ/năm)</label>'+yrs+'</div>';
+   +'<div style="margin-top:14px"><label>Phân bổ theo năm (tham khảo mức đều ~'+num(req/5)+' giờ/năm)</label>'+yrs+'</div>'+skillNote();
 }
+let flt='all',sortBy='new',fYear='',fType='',fStat='';
+const fold=s=>String(s==null?'':s).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D').toLowerCase();
 function renderTable(){
-  const c=cycle(),kw=q.trim().toLowerCase();
+  const c=cycle();
   const tn=id=>(state.types.find(t=>t.id===id)||{}).name||'—';
-  const rows=state.items.slice().sort((a,b)=>eff(b).localeCompare(eff(a)))
-    .filter(i=>!kw||[i.title,i.org,i.issuer,i.orgCode,i.certNo,i.regNo,i.note,tn(i.typeId)].join(' ').toLowerCase().includes(kw));
-  $('#tb').innerHTML=rows.length?rows.map(i=>{
-    const out=c&&!inCycle(i,c);
-    const calc=i.mode==='calc'||(!i.mode&&i.amount!=null&&i.factor!=null);
+  const nAll=state.items.length,nSk=state.items.filter(i=>i.mode==='none').length;
+  $('#fltBar').innerHTML=[['all','Tất cả ('+nAll+')'],['cme','Có giờ tín chỉ ('+(nAll-nSk)+')'],['skill','Kỹ năng, đào tạo nội bộ ('+nSk+')']]
+    .map(([k,t])=>'<button type="button" class="chip sm'+(flt===k?' on':'')+'" aria-pressed="'+(flt===k)+'" data-f="'+k+'">'+t+'</button>').join('');
+  const years=[...new Set(state.items.map(i=>eff(i).slice(0,4)))].sort().reverse();
+  if(fYear&&!years.includes(fYear))fYear='';
+  $('#sYear').innerHTML='<option value="">Tất cả các năm</option>'+years.map(y=>'<option value="'+y+'"'+(y===fYear?' selected':'')+'>'+y+'</option>').join('');
+  if(fType&&!state.types.some(t=>t.id===fType))fType='';
+  $('#sType').innerHTML='<option value="">Tất cả hình thức</option>'+state.types.map(t=>'<option value="'+esc(t.id)+'"'+(t.id===fType?' selected':'')+'>'+esc(t.name)+'</option>').join('');
+  $('#sSort').value=sortBy;$('#sStat').value=fStat;
+  const toks=fold(q).split(/\s+/).filter(Boolean);
+  const hay=i=>fold([i.title,i.org,i.issuer,i.orgCode,i.certNo,i.regNo,i.note,i.trainer,i.result,tn(i.typeId),i.date,i.dateEnd,i.date?fmt(pd(i.date)):'',eff(i).slice(0,4),i.credits].join(' '));
+  const today=new Date();today.setHours(0,0,0,0);
+  const okStat=i=>{
+    if(!fStat)return true;
+    const none=i.mode==='none';
+    if(fStat==='in')return !none&&c&&inCycle(i,c);
+    if(fStat==='out')return !none&&c&&!inCycle(i,c);
+    if(fStat==='file')return !!i.fileId;
+    if(fStat==='nofile')return !i.fileId;
+    if(fStat==='exp')return none&&i.validUntil&&vstat(i.validUntil).d<=90;
+    return true;
+  };
+  let rows=state.items.filter(i=>(flt==='all'||(flt==='skill')===(i.mode==='none'))&&(!fYear||eff(i).slice(0,4)===fYear)&&(!fType||i.typeId===fType)&&okStat(i)&&(!toks.length||toks.every(t=>hay(i).includes(t))));
+  const cmp={new:(a,b)=>eff(b).localeCompare(eff(a))||b.date.localeCompare(a.date),old:(a,b)=>eff(a).localeCompare(eff(b))||a.date.localeCompare(b.date),
+    az:(a,b)=>String(a.title).localeCompare(String(b.title),'vi'),cred:(a,b)=>(Number(b.credits)||0)-(Number(a.credits)||0)||eff(b).localeCompare(eff(a))}[sortBy];
+  rows.sort(cmp);
+  const sum=l=>Math.round(l.reduce((t,i)=>t+(Number(i.credits)||0),0)*100)/100;
+  const active=!!(toks.length||fYear||fType||fStat||flt!=='all');
+  $('#lfClear').classList.toggle('hide',!active);
+  $('#lstInfo').textContent=nAll?('Hiển thị '+rows.length+' / '+nAll+' hoạt động · '+num(sum(rows))+' giờ tín chỉ'):'';
+  const rowHtml=i=>{
+    const none=i.mode==='none';
+    const out=!none&&c&&!inCycle(i,c);
+    const calc=!none&&(i.mode==='calc'||(!i.mode&&i.amount!=null&&i.factor!=null));
     const when=fmt(pd(i.date))+(i.dateEnd&&i.dateEnd!==i.date?' – '+fmt(pd(i.dateEnd)):'');
-    const how=calc?'tự tính: '+num(i.amount)+' × '+num(i.factor):'theo chứng nhận';
+    const how=none?'không tính tín chỉ':calc?'tự tính: '+num(i.amount)+' × '+num(i.factor):'theo chứng nhận';
     const miss=i.fileId&&haveFiles&&!haveFiles.has(i.fileId);
     const wb=s=>esc(s).replace(/\//g,'/<wbr>');
     const cert=[i.issuer?esc(i.issuer):'',i.certNo?'Số '+wb(i.certNo):'',i.regNo?'Lưu số '+wb(i.regNo):'',i.issueDate?'Cấp '+fmt(pd(i.issueDate)):''].filter(Boolean).join('<br>');
-    const meta='<span class="tag">'+esc(tn(i.typeId))+'</span>'+(i.org?'<span>'+esc(i.org)+'</span>':'')+(i.orgCode?'<span>Mã '+esc(i.orgCode)+'</span>':'')+(i.note?'<span>'+esc(i.note)+'</span>':'');
+    const vs=none&&i.validUntil?vstat(i.validUntil):null;
+    const hasH=i.hours!==''&&i.hours!=null&&Number.isFinite(Number(i.hours));
+    const meta='<span class="tag">'+esc(tn(i.typeId))+'</span>'+(i.org?'<span>'+esc(i.org)+'</span>':'')+(i.orgCode?'<span>Mã '+esc(i.orgCode)+'</span>':'')
+      +(none&&i.result?'<span class="tag">Kết quả: '+esc(i.result)+'</span>':'')+(none&&i.trainer?'<span>Hướng dẫn/đánh giá: '+esc(i.trainer)+'</span>':'')+(none&&hasH?'<span>'+num(Number(i.hours))+' giờ học</span>':'')
+      +(vs?'<span class="st st-'+vs.c+'">'+vs.t+'</span>':'')+(i.note?'<span>'+esc(i.note)+'</span>':'');
     const fileBit=i.fileId?'<div style="margin-top:6px">'+(miss?'<span class="tag warn">thiếu file – bấm Sửa để đính kèm lại</span>':'<button class="sm" data-act="view" data-id="'+i.id+'">Xem file</button>')+'</div>':'';
-    return '<tr class="'+(out?'out':'')+'"><td class="c-date">'+when+(out?'<br><span class="tag">ngoài chu kỳ</span>':'')+'</td>'
+    return '<tr class="'+(out?'out ':'')+(none?'none':'')+'"><td class="c-date">'+when+(out?'<br><span class="tag">ngoài chu kỳ</span>':'')+'</td>'
      +'<td class="c-main"><b>'+esc(i.title)+'</b><span class="meta">'+meta+'</span></td>'
-     +'<td class="c-cred num"><b>'+num(i.credits)+'</b><br><span class="hint">'+how+'</span></td>'
+     +'<td class="c-cred num"><b>'+(none?'—':num(i.credits))+'</b><br><span class="hint">'+how+'</span></td>'
      +'<td class="c-cert"><span class="hint">'+cert+'</span>'+fileBit+'</td>'
      +'<td class="c-act num"><button class="sm" data-act="edit" data-id="'+i.id+'">Sửa</button> <button class="sm del" data-act="del" data-id="'+i.id+'">Xóa</button></td></tr>';
-  }).join(''):'<tr><td colspan="5" class="hint">Chưa có hoạt động nào.</td></tr>';
+  };
+  let html='';
+  if(sortBy==='new'||sortBy==='old'){
+    let cur=null,grp=[];
+    const flush=()=>{if(grp.length)html+='<tr class="grp"><td colspan="5">Năm '+cur+' <span>· '+grp.length+' hoạt động · '+num(sum(grp))+' giờ tín chỉ</span></td></tr>'+grp.map(rowHtml).join('')};
+    for(const i of rows){const y=eff(i).slice(0,4);if(y!==cur){flush();cur=y;grp=[]}grp.push(i)}
+    flush();
+  }else html=rows.map(rowHtml).join('');
+  $('#tb').innerHTML=rows.length?html:'<tr><td colspan="5" class="hint">'+(nAll?'Không có hoạt động nào khớp bộ lọc. Bấm “Xóa bộ lọc” để xem tất cả.':'Chưa có hoạt động nào.')+'</td></tr>';
 }
+$('#fltBar').onclick=e=>{const b=e.target.closest('button');if(!b)return;flt=b.dataset.f;renderTable()};
+$('#sSort').onchange=e=>{sortBy=e.target.value;renderTable()};
+$('#sYear').onchange=e=>{fYear=e.target.value;renderTable()};
+$('#sType').onchange=e=>{fType=e.target.value;renderTable()};
+$('#sStat').onchange=e=>{fStat=e.target.value;renderTable()};
+$('#lfClear').onclick=()=>{q='';$('#q').value='';flt='all';fYear='';fType='';fStat='';renderTable()};
 function renderTypes(){
-  $('#types').innerHTML=state.types.map(t=>'<div class="row" style="margin-bottom:6px"><input data-tid="'+t.id+'" data-f="name" value="'+esc(t.name)+'" style="flex:1;min-width:200px"><input data-tid="'+t.id+'" data-f="factor" type="number" step="0.01" min="0" value="'+t.factor+'" style="width:90px"><button class="sm del" data-tdel="'+t.id+'">Xóa</button></div>').join('');
+  const row=t=>'<div class="row" style="margin-bottom:6px"><input data-tid="'+t.id+'" data-f="name" value="'+esc(t.name)+'" style="flex:1;min-width:200px">'
+    +(t.noCredit?'<span class="tag" style="width:90px;text-align:center">không tính TC</span>':'<input data-tid="'+t.id+'" data-f="factor" type="number" step="0.01" min="0" value="'+t.factor+'" style="width:90px">')
+    +'<button class="sm del" data-tdel="'+t.id+'">Xóa</button></div>';
+  $('#types').innerHTML=state.types.map(row).join('');
   const cur=$('#fType').value;
   $('#fType').innerHTML=state.types.map(t=>'<option value="'+t.id+'">'+esc(t.name)+'</option>').join('');
   if(cur&&state.types.some(t=>t.id===cur))$('#fType').value=cur;
@@ -453,7 +627,7 @@ function renderTypes(){
 function renderAll(){
   $('#pName').value=state.profile.name||'';$('#pLic').value=state.profile.license||'';
   $('#pStart').value=state.profile.cycleStart||'';$('#pReq').value=state.profile.required||120;
-  renderTypes();renderDash();renderTable();syncFactor();renderBk();
+  renderTypes();renderDash();renderTable();renderDocs();syncFactor();renderBk();
   $('#profile').open=!state.profile.cycleStart;
   $('#guide').open=!state.profile.cycleStart&&!state.items.length;
 }
@@ -464,8 +638,9 @@ function syncFactor(){const t=state.types.find(t=>t.id===$('#fType').value);if(t
 const getMode=()=>document.querySelector('input[name=fMode]:checked').value;
 function setMode(m){
   document.querySelector('input[name=fMode][value='+m+']').checked=true;
-  $('#boxCert').classList.toggle('hide',m!=='cert');$('#boxCalc').classList.toggle('hide',m!=='calc');
+  $('#boxCert').classList.toggle('hide',m!=='cert');$('#boxCalc').classList.toggle('hide',m!=='calc');$('#boxNone').classList.toggle('hide',m!=='none');
   $('#fCredIn').required=(m==='cert');$('#fAmt').required=(m==='calc');
+  $('#fTitle').placeholder=m==='none'?'VD: Vận hành máy xét nghiệm sinh hóa tự động; Quy trình mới theo ISO 15189:2022; Kỹ thuật hồi sức tim phổi':'VD: Tiếp cận kỹ thuật xét nghiệm mới trong chẩn đoán và điều trị';
   if(m==='calc')syncFactor();
   updatePreview();
 }
@@ -475,8 +650,8 @@ function renderLists(){
   $('#dlIssuer').innerHTML=uniq('issuer').map(v=>'<option value="'+esc(v)+'">').join('');
   $('#dlOrg').innerHTML=uniq('org').map(v=>'<option value="'+esc(v)+'">').join('');
 }
-function resetForm(){editId=null;$('#f').reset();$('#formTitle').textContent='Thêm hoạt động CME';$('#fSubmit').textContent='Lưu hoạt động';$('#fCancel').classList.add('hide');$('#editBadge').classList.add('hide');$('#fType').value=state.types[0]?state.types[0].id:'';setMode('cert');syncFactor();renderLists();syncChips();fitTitle();caseHint();updateFileZone();updatePreview()}
-$('#fType').onchange=()=>{const t=state.types.find(t=>t.id===$('#fType').value);if(t)$('#fFac').value=t.factor;calcCred();syncChips();updatePreview()};
+function resetForm(){editId=null;$('#f').reset();$('#formTitle').textContent='Thêm hoạt động';$('#fSubmit').textContent='Lưu hoạt động';$('#fCancel').classList.add('hide');$('#editBadge').classList.add('hide');$('#fType').value=state.types[0]?state.types[0].id:'';setMode('cert');syncFactor();renderLists();syncChips();fitTitle();caseHint();updateFileZone();updatePreview()}
+$('#fType').onchange=()=>{const t=state.types.find(t=>t.id===$('#fType').value);if(t){$('#fFac').value=t.factor;if(t.noCredit&&getMode()!=='none')setMode('none');else if(!t.noCredit&&getMode()==='none')setMode('cert')}calcCred();syncChips();updatePreview()};
 $('#fAmt').oninput=calcCred;$('#fFac').oninput=calcCred;
 $('#fCancel').onclick=resetForm;
 $('#f').onsubmit=async e=>{
@@ -487,13 +662,17 @@ $('#f').onsubmit=async e=>{
   const mode=getMode(),round2=v=>Math.round(v*100)/100;
   const date=$('#fDate').value,dateEnd=$('#fDateEnd').value;
   if(dateEnd&&dateEnd<date){alert('“Đến ngày” phải sau hoặc bằng ngày tham dự.');return}
-  let amount=null,factor=null,credits;
-  if(mode==='cert'){credits=Number($('#fCredIn').value)}
+  let amount=null,factor=null,credits,extra={hours:'',validUntil:'',result:'',trainer:''};
+  if(mode==='none'){
+    credits=0;const hv=$('#fHours').value.trim();extra={hours:hv===''?'':Number(hv),validUntil:$('#fValid').value||'',result:$('#fResult').value.trim(),trainer:$('#fTrainer').value.trim()};
+    if(extra.validUntil&&extra.validUntil<date){alert('“Hiệu lực đến” phải sau hoặc bằng ngày tham dự.');return}
+  }
+  else if(mode==='cert'){credits=Number($('#fCredIn').value)}
   else{amount=Number($('#fAmt').value)||0;factor=Number($('#fFac').value)||0;credits=round2(amount*factor)}
-  if(!Number.isFinite(credits)||credits<0||($('#fCredIn').value===''&&mode==='cert')){alert('Hãy nhập số giờ tín chỉ.');return}
+  if(mode!=='none'&&(!Number.isFinite(credits)||credits<0||($('#fCredIn').value===''&&mode==='cert'))){alert('Hãy nhập số giờ tín chỉ.');return}
   const it={id:old?old.id:uid(),date,dateEnd:dateEnd||'',title:$('#fTitle').value.trim(),typeId:$('#fType').value,org:$('#fOrg').value.trim(),
     issuer:$('#fIssuer').value.trim(),certNo:$('#fCert').value.trim(),regNo:$('#fReg').value.trim(),issueDate:$('#fIssue').value||'',orgCode:$('#fCode').value.trim(),
-    mode,amount,factor,credits:round2(credits),note:$('#fNote').value.trim(),
+    mode,amount,factor,credits:round2(credits),...extra,note:$('#fNote').value.trim(),
     fileId:old?old.fileId:null,fileName:old?old.fileName:null,updatedAt:Date.now()};
   if(file){
     const oldFile=it.fileId,newId=uid();
@@ -517,8 +696,10 @@ $('#tb').onclick=async e=>{
     const calc=it.mode==='calc'||(!it.mode&&it.amount!=null&&it.factor!=null);
     $('#fDate').value=it.date||'';$('#fDateEnd').value=it.dateEnd||'';$('#fTitle').value=it.title||'';$('#fOrg').value=it.org||'';$('#fCode').value=it.orgCode||'';
     $('#fType').value=it.typeId;$('#fIssuer').value=it.issuer||'';$('#fCert').value=it.certNo||'';$('#fReg').value=it.regNo||'';$('#fIssue').value=it.issueDate||'';$('#fNote').value=it.note||'';
-    setMode(calc?'calc':'cert');
-    $('#fCredIn').value=calc?'':it.credits;$('#fAmt').value=calc?(it.amount==null?'':it.amount):'';$('#fFac').value=calc?(it.factor==null?'':it.factor):'';
+    const none=it.mode==='none';
+    setMode(none?'none':calc?'calc':'cert');
+    $('#fTrainer').value=it.trainer||'';$('#fHours').value=it.hours==null?'':it.hours;$('#fValid').value=it.validUntil||'';$('#fResult').value=it.result||'';
+    $('#fCredIn').value=(calc||none)?'':it.credits;$('#fAmt').value=calc?(it.amount==null?'':it.amount):'';$('#fFac').value=calc?(it.factor==null?'':it.factor):'';
     $('#fFile').value='';calcCred();$('#formTitle').textContent='Sửa hoạt động';$('#editBadge').classList.remove('hide');
     $('#fSubmit').textContent='Cập nhật';$('#fCancel').classList.remove('hide');
     syncChips();fitTitle();caseHint();updateFileZone();updatePreview();$('#addForm').scrollIntoView({behavior:'smooth'});
@@ -543,11 +724,14 @@ $('#types').onclick=e=>{
   state.types=state.types.filter(t=>t.id!==id);save();renderTypes();syncFactor();
 };
 $('#addType').onclick=()=>{state.types.push({id:uid(),name:'Hình thức mới',factor:1});save();renderTypes()};
+$('#addSkillType').onclick=()=>{state.types.push({id:uid(),name:'Loại kỹ năng / đào tạo mới',factor:1,noCredit:true});save();renderTypes()};
 
 /* ---------- Biểu mẫu: chọn hình thức, ô nội dung, bản scan, xem trước ---------- */
 function syncChips(){
   const cur=$('#fType').value;
-  $('#fTypeChips').innerHTML=state.types.map(t=>'<button type="button" class="chip'+(t.id===cur?' on':'')+'" aria-pressed="'+(t.id===cur)+'" data-tid="'+esc(t.id)+'">'+esc(t.name)+'</button>').join('');
+  const mk=t=>'<button type="button" class="chip'+(t.id===cur?' on':'')+'" aria-pressed="'+(t.id===cur)+'" data-tid="'+esc(t.id)+'">'+esc(t.name)+'</button>';
+  const a=state.types.filter(t=>!t.noCredit),b=state.types.filter(t=>t.noCredit);
+  $('#fTypeChips').innerHTML=(a.length?'<span class="chip-grp">Có giờ tín chỉ CME</span>'+a.map(mk).join(''):'')+(b.length?'<span class="chip-grp">Kỹ năng, đào tạo nội bộ (không tính tín chỉ)</span>'+b.map(mk).join(''):'');
 }
 $('#fTypeChips').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;$('#fType').value=b.dataset.tid;$('#fType').onchange()};
 const fT=$('#fTitle');
@@ -575,6 +759,11 @@ function updateFileZone(){
 }
 $('#fFile').addEventListener('change',updateFileZone);
 function updatePreview(){
+  if(getMode()==='none'){
+    const v=$('#fValid').value,o=['<span><b>Không tính tín chỉ</b> · lưu vào hồ sơ kỹ năng, đào tạo nội bộ</span>'];
+    if(v){const x=vstat(v);o.push('<span class="'+(x.c==='ok'?'ok':'warnc')+'">'+x.t+'</span>')}
+    $('#pv').innerHTML=o.join('');return;
+  }
   const mode=getMode(),raw=mode==='cert'?$('#fCredIn').value:$('#fAmt').value;
   const credits=mode==='cert'?Number(raw):(Number($('#fAmt').value)||0)*(Number($('#fFac').value)||0);
   const d=$('#fDateEnd').value||$('#fDate').value,c=cycle(),out=[];
@@ -631,12 +820,16 @@ function buildXlsx(st){
   const c=st.profile.cycleStart?(()=>{const a=pd(st.profile.cycleStart),b=new Date(a.getFullYear()+5,a.getMonth(),a.getDate());b.setDate(b.getDate()-1);return{start:a,end:b}})():null;
   const req=Number(st.profile.required)||120;
   const tn=id=>(st.types.find(t=>t.id===id)||{}).name||'';
-  const items=st.items.slice().sort((a,b)=>(a.dateEnd||a.date).localeCompare(b.dateEnd||b.date));
+  const docs=st.docs||[];
+  const today=new Date();today.setHours(0,0,0,0);
+  const all=st.items.slice().sort((a,b)=>(a.dateEnd||a.date).localeCompare(b.dateEnd||b.date));
+  const items=all.filter(i=>i.mode!=='none'),skills=all.filter(i=>i.mode==='none');
   const n=items.length;
+  const vtxt=v=>{if(!v)return '';const d=Math.round((pd(v)-today)/864e5);return d<0?'Đã hết hạn':d<=90?'Sắp hết hạn':'Còn hiệu lực'};
+  const dv=s=>s?{v:serial(pd(s)),s:2}:{v:''};
   const H=['STT','Ngày tham dự / bắt đầu','Đến ngày','Nội dung / chủ đề','Hình thức','Đơn vị / cá nhân chịu trách nhiệm tổ chức','Đơn vị cấp chứng nhận','Số chứng nhận','Số lưu sổ','Ngày cấp','Mã cơ sở cập nhật kiến thức y khoa liên tục','Cách xác định giờ tín chỉ','Số tiết / giờ thực tế','Hệ số quy đổi','Giờ tín chỉ','Có file scan','Trong chu kỳ','Ghi chú'];
   const r1=[H.map(h=>({v:h,s:1}))];
   let total=0,cnt=0;
-  const dv=s=>s?{v:serial(pd(s)),s:2}:{v:''};
   items.forEach((i,k)=>{
     const r=k+2,d=pd(i.dateEnd||i.date),inC=c?(d>=c.start&&d<=c.end):false;
     const calc=i.mode==='calc'||(!i.mode&&i.amount!=null&&i.factor!=null);
@@ -649,8 +842,26 @@ function buildXlsx(st){
   total=Math.round(total*100)/100;
   if(n>0)r1.push([null,null,null,{v:'Tổng giờ tín chỉ trong chu kỳ',s:4},null,null,null,null,null,null,null,null,null,null,{v:total,s:5,f:'SUMIFS(O2:O'+(n+1)+',Q2:Q'+(n+1)+',"Có")'}]);
   const s1=sheetXml(r1,[6,14,14,40,30,30,30,18,14,12,22,18,12,12,12,12,13,30],{freeze:true,filter:n>0?'A1:R'+(n+1):null});
+  const sheets=[['Hoạt động',s1]];
+  if(skills.length){
+    const SH=['STT','Ngày bắt đầu','Đến ngày','Nội dung','Loại','Đơn vị / cá nhân tổ chức','Người hướng dẫn / đánh giá','Thời lượng (giờ)','Kết quả','Hiệu lực đến','Tình trạng hiệu lực','Đơn vị cấp chứng nhận','Số chứng nhận','Ngày cấp','Có file scan','Ghi chú'];
+    const rs=[SH.map(h=>({v:h,s:1}))];
+    skills.forEach((i,k)=>{
+      const hh=i.hours!==''&&i.hours!=null&&Number.isFinite(Number(i.hours));
+      rs.push([{v:k+1},dv(i.date),dv(i.dateEnd),{v:i.title},{v:tn(i.typeId)},{v:i.org},{v:i.trainer},hh?{v:Number(i.hours),s:3}:{v:''},{v:i.result},dv(i.validUntil),{v:vtxt(i.validUntil)},{v:i.issuer},{v:i.certNo},dv(i.issueDate),{v:i.fileId?'Có':'Không'},{v:i.note}]);
+    });
+    sheets.push(['Kỹ năng, đào tạo nội bộ',sheetXml(rs,[6,14,14,40,30,28,26,12,16,14,16,28,18,12,12,30],{freeze:true,filter:'A1:P'+(skills.length+1)})]);
+  }
+  if(docs.length){
+    const kn=id=>(DOC_KINDS.find(k=>k.id===id)||{name:''}).name;
+    const ord=id=>{const k=DOC_KINDS.findIndex(k=>k.id===id);return k<0?9:k};
+    const dd=docs.slice().sort((a,b)=>ord(a.kind)-ord(b.kind)||(a.issueDate||'').localeCompare(b.issueDate||''));
+    const DH=['STT','Loại hồ sơ','Tên giấy tờ','Số','Nơi cấp','Ngày cấp','Có giá trị đến','Tình trạng','Phạm vi hoạt động chuyên môn, ghi chú','Có file scan'];
+    const rd=[DH.map(h=>({v:h,s:1}))];
+    dd.forEach((d,k)=>rd.push([{v:k+1},{v:kn(d.kind)},{v:d.title},{v:d.number},{v:d.issuer},dv(d.issueDate),dv(d.validUntil),{v:d.validUntil?vtxt(d.validUntil):'Không ghi thời hạn'},{v:d.note},{v:d.fileId?'Có':'Không'}]));
+    sheets.push(['Hồ sơ quan trọng',sheetXml(rd,[6,22,40,24,30,14,14,18,40,12],{freeze:true,filter:'A1:J'+(dd.length+1)})]);
+  }
   const miss=Math.max(0,Math.round((req-total)*100)/100);
-  const today=new Date();
   const r2=[[{v:'Chỉ tiêu',s:1},{v:'Giá trị',s:1}],
     [{v:'Họ tên'},{v:st.profile.name||''}],
     [{v:'Số chứng chỉ / giấy phép hành nghề'},{v:st.profile.license||''}],
@@ -662,24 +873,28 @@ function buildXlsx(st){
     [{v:'Số hoạt động trong chu kỳ'},{v:cnt}],
     [{v:'Ngày xuất file'},{v:serial(today),s:2}],
     [{v:'Công cụ'},{v:'CME Tracker'}],
-    [{v:'Tác giả / Bản quyền'},{v:'© 2026 Bá Tử Kinh | Tường Vi. Bảo lưu mọi quyền.'}]];
-  const s2=sheetXml(r2,[38,34]);
-  const r3=[[{v:'Hình thức',s:1},{v:'Hệ số quy đổi',s:1}],...st.types.map(t=>[{v:t.name},{v:Number(t.factor)||0,s:3}])];
-  const s3=sheetXml(r3,[48,16]);
+    [{v:'Tác giả / Bản quyền'},{v:'© 2026 Bá Tử Kinh | Tường Vi. Bảo lưu mọi quyền.'}],
+    [{v:'Kỹ năng, đào tạo nội bộ (không tính tín chỉ)'},{v:skills.length}],
+    [{v:'Hồ sơ quan trọng'},{v:docs.length}]];
+  sheets.push(['Tổng hợp',sheetXml(r2,[38,34])]);
+  const r3=[[{v:'Hình thức',s:1},{v:'Hệ số quy đổi',s:1}],...st.types.filter(t=>!t.noCredit).map(t=>[{v:t.name},{v:Number(t.factor)||0,s:3}])];
+  sheets.push(['Hệ số quy đổi',sheetXml(r3,[48,16])]);
   const enc=new TextEncoder(),X='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
   const styles=X+'<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><numFmts count="1"><numFmt numFmtId="164" formatCode="dd/mm/yyyy"/></numFmts><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFDCE6F5"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="6"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment wrapText="1" vertical="center"/></xf><xf numFmtId="164" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/><xf numFmtId="2" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="2" fontId="1" fillId="0" borderId="0" xfId="0" applyNumberFormat="1" applyFont="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>';
+  const WS='http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet';
   const files=[
-    ['[Content_Types].xml',X+'<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet3.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>'],
+    ['[Content_Types].xml',X+'<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>'+sheets.map((_,i)=>'<Override PartName="/xl/worksheets/sheet'+(i+1)+'.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>').join('')+'<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>'],
     ['_rels/.rels',X+'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>'],
-    ['xl/workbook.xml',X+'<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Hoạt động" sheetId="1" r:id="rId1"/><sheet name="Tổng hợp" sheetId="2" r:id="rId2"/><sheet name="Hệ số quy đổi" sheetId="3" r:id="rId3"/></sheets></workbook>'],
-    ['xl/_rels/workbook.xml.rels',X+'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet2.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet3.xml"/><Relationship Id="rId4" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>'],
-    ['xl/styles.xml',styles],['xl/worksheets/sheet1.xml',s1],['xl/worksheets/sheet2.xml',s2],['xl/worksheets/sheet3.xml',s3]
+    ['xl/workbook.xml',X+'<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>'+sheets.map(([nm],i)=>'<sheet name="'+xe(nm)+'" sheetId="'+(i+1)+'" r:id="rId'+(i+1)+'"/>').join('')+'</sheets></workbook>'],
+    ['xl/_rels/workbook.xml.rels',X+'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'+sheets.map((_,i)=>'<Relationship Id="rId'+(i+1)+'" Type="'+WS+'" Target="worksheets/sheet'+(i+1)+'.xml"/>').join('')+'<Relationship Id="rId'+(sheets.length+1)+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>'],
+    ['xl/styles.xml',styles],
+    ...sheets.map(([,x],i)=>['xl/worksheets/sheet'+(i+1)+'.xml',x])
   ].map(([name,txt])=>({name,data:enc.encode(txt)}));
   return zipStore(files);
 }
 /* XLSX-END */
 $('#exXlsx').onclick=()=>{
-  if(!state.items.length){alert('Chưa có hoạt động nào để xuất.');return}
+  if(!state.items.length&&!state.docs.length){alert('Chưa có dữ liệu nào để xuất.');return}
   download('cme-'+new Date().toISOString().slice(0,10)+'.xlsx',buildXlsx(state));
 };
 
@@ -688,17 +903,17 @@ const download=(name,blob)=>{const a=document.createElement('a');a.href=URL.crea
 $('#exJson').onclick=async()=>{
   const files=[];let err=null;
   try{for(const f of await fall())files.push({id:f.id,name:f.name,type:f.type,data:await toDataURL(recBlob(f))})}catch(e){err=e}
-  const got=new Set(files.map(f=>f.id)),need=state.items.filter(i=>i.fileId),miss=need.filter(i=>!got.has(i.fileId));
+  const got=new Set(files.map(f=>f.id)),need=[...state.items,...state.docs].filter(i=>i.fileId),miss=need.filter(i=>!got.has(i.fileId));
   state.meta=Object.assign({},state.meta,{lastBackup:new Date().toISOString()});save();renderBk();
   download('cme-backup-'+new Date().toISOString().slice(0,10)+'.json',new Blob([JSON.stringify({version:2,state,files})],{type:'application/json'}));
-  alert('Đã xuất sao lưu: '+state.items.length+' hoạt động; file đính kèm '+(need.length-miss.length)+'/'+need.length+'.'
+  alert('Đã xuất sao lưu: '+state.items.length+' hoạt động, '+state.docs.length+' hồ sơ quan trọng; file đính kèm '+(need.length-miss.length)+'/'+need.length+'.'
     +(miss.length||err?'\n⚠ Có '+miss.length+' hoạt động thiếu file đính kèm'+(err?' (lỗi: '+(err.message||err)+')':'')+'. Hãy bấm Sửa để đính kèm lại các mục này rồi xuất lại.':''));
 };
 $('#exCsv').onclick=()=>{
   const tn=id=>(state.types.find(t=>t.id===id)||{}).name||'';
   const cell=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
-  const head=['Ngày tham dự / bắt đầu','Đến ngày','Nội dung / chủ đề','Hình thức','Đơn vị chịu trách nhiệm tổ chức','Đơn vị cấp chứng nhận','Số chứng nhận','Số lưu sổ','Ngày cấp','Mã cơ sở','Giờ tín chỉ','Cách xác định','Ghi chú'];
-  const rows=state.items.slice().sort((a,b)=>eff(a).localeCompare(eff(b))).map(i=>[i.date,i.dateEnd,i.title,tn(i.typeId),i.org,i.issuer,i.certNo,i.regNo,i.issueDate,i.orgCode,i.credits,(i.mode==='calc'||(!i.mode&&i.amount!=null&&i.factor!=null))?'Tự tính':'Theo chứng nhận',i.note]);
+  const head=['Ngày tham dự / bắt đầu','Đến ngày','Nội dung / chủ đề','Hình thức','Đơn vị chịu trách nhiệm tổ chức','Đơn vị cấp chứng nhận','Số chứng nhận','Số lưu sổ','Ngày cấp','Mã cơ sở','Giờ tín chỉ','Cách xác định','Người hướng dẫn / đánh giá','Thời lượng (giờ)','Kết quả','Hiệu lực đến','Ghi chú'];
+  const rows=state.items.slice().sort((a,b)=>eff(a).localeCompare(eff(b))).map(i=>[i.date,i.dateEnd,i.title,tn(i.typeId),i.org,i.issuer,i.certNo,i.regNo,i.issueDate,i.orgCode,i.mode==='none'?'':i.credits,i.mode==='none'?'Không tính tín chỉ':(i.mode==='calc'||(!i.mode&&i.amount!=null&&i.factor!=null))?'Tự tính':'Theo chứng nhận',i.trainer,i.hours,i.result,i.validUntil,i.note]);
   download('cme.csv',new Blob(['\ufeff'+[head,...rows].map(r=>r.map(cell).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'}));
 };
 /* MERGE-START */
@@ -707,27 +922,34 @@ const normKey=i=>{
   return c?['c',String(i.issuer||i.org||'').trim().toLowerCase(),c,i.date].join('|')
           :[i.date,String(i.title||'').trim().toLowerCase(),Number(i.credits)||0].join('|');
 };
+const docKey=d=>{
+  const n=String(d.number||'').trim().toLowerCase();
+  return n?['n',d.kind,n].join('|'):[d.kind,String(d.title||'').trim().toLowerCase(),d.issueDate||''].join('|');
+};
 function mergeStates(L,R){
   const st=JSON.parse(JSON.stringify(L));
   st.deleted=Object.assign({},L.deleted||{});
-  st.meta=st.meta||{};
-  const stats={added:0,updated:0,removed:0,dup:0,kept:0};
+  st.meta=st.meta||{};st.docs=st.docs||[];
+  const stats={added:0,updated:0,removed:0,dup:0,kept:0,docs:{added:0,updated:0,removed:0,dup:0,kept:0}};
   for(const [id,t] of Object.entries(R.deleted||{}))st.deleted[id]=Math.max(st.deleted[id]||0,Number(t)||0);
-  const byId=new Map(st.items.map(i=>[i.id,i]));
-  const keys=new Set(st.items.map(normKey));
-  for(const r of R.items||[]){
-    const l=byId.get(r.id),ts=Number(r.updatedAt)||0;
-    if(l){
-      if(ts>(Number(l.updatedAt)||0)){Object.assign(l,r);stats.updated++}else stats.kept++;
-    }else{
-      const del=st.deleted[r.id];
-      if(del&&del>=ts)continue;
-      if(keys.has(normKey(r))){stats.dup++;continue}
-      const c=Object.assign({},r);st.items.push(c);byId.set(c.id,c);keys.add(normKey(c));stats.added++;
+  const run=(key,kf,S)=>{
+    const byId=new Map(st[key].map(i=>[i.id,i]));
+    const keys=new Set(st[key].map(kf));
+    for(const r of R[key]||[]){
+      const l=byId.get(r.id),ts=Number(r.updatedAt)||0;
+      if(l){
+        if(ts>(Number(l.updatedAt)||0)){Object.assign(l,r);S.updated++}else S.kept++;
+      }else{
+        const del=st.deleted[r.id];
+        if(del&&del>=ts)continue;
+        if(keys.has(kf(r))){S.dup++;continue}
+        const c=Object.assign({},r);st[key].push(c);byId.set(c.id,c);keys.add(kf(c));S.added++;
+      }
     }
-  }
-  st.items=st.items.filter(i=>{const del=st.deleted[i.id];if(del&&del>=(Number(i.updatedAt)||0)){stats.removed++;return false}return true});
-  for(const i of st.items){if(st.deleted[i.id]&&st.deleted[i.id]<(Number(i.updatedAt)||0))delete st.deleted[i.id]}
+    st[key]=st[key].filter(i=>{const del=st.deleted[i.id];if(del&&del>=(Number(i.updatedAt)||0)){S.removed++;return false}return true});
+    for(const i of st[key]){if(st.deleted[i.id]&&st.deleted[i.id]<(Number(i.updatedAt)||0))delete st.deleted[i.id]}
+  };
+  run('items',normKey,stats);run('docs',docKey,stats.docs);
   st.profile=Object.assign({},L.profile);
   for(const k of ['name','license','cycleStart'])if(!st.profile[k]&&R.profile&&R.profile[k])st.profile[k]=R.profile[k];
   const tid=new Set((st.types||[]).map(t=>t.id));st.types=st.types||[];
@@ -746,6 +968,7 @@ $('#imFile').onchange=async e=>{
     if(!d.state||!Array.isArray(d.state.items))throw new Error('File sao lưu không hợp lệ');
     d.state.items=d.state.items.filter(i=>i&&typeof i.id==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(i.date||''));
     d.state.deleted=d.state.deleted||{};d.state.meta=d.state.meta||{};d.state.profile=d.state.profile||{};d.state.types=d.state.types||[];
+    d.state.docs=(Array.isArray(d.state.docs)?d.state.docs:[]).filter(x=>x&&typeof x.id==='string'&&x.title);
     const files=Array.isArray(d.files)?d.files:[];
     let failed=0;
     const putFile=async x=>{try{await fput({id:x.id,name:x.name,type:x.type,buf:dataToBuf(x.data)})}catch(_){failed++}};
@@ -757,17 +980,17 @@ $('#imFile').onchange=async e=>{
       if(!confirm('Ghi đè sẽ XÓA dữ liệu hiện tại trên máy này và thay bằng file sao lưu. Tiếp tục?'))return;
       await fclear();
       for(const x of files)await putFile(x);
-      state=d.state;save();resetForm();renderAll();await refreshFiles();
-      alert('Đã nhập xong (ghi đè): '+state.items.length+' hoạt động.'+await fileReport(state.items));
+      state=ensureTypes(d.state);save();resetForm();renderAll();await refreshFiles();
+      alert('Đã nhập xong (ghi đè): '+state.items.length+' hoạt động, '+state.docs.length+' hồ sơ quan trọng.'+await fileReport(state.items.concat(state.docs)));
     }else{
       if(!confirm('Gộp dữ liệu từ file sao lưu vào máy này?'))return;
       const r=mergeStates(state,d.state),ns=r.state,s=r.stats;
-      const used=new Set(ns.items.map(i=>i.fileId).filter(Boolean));
+      const used=new Set(ns.items.concat(ns.docs).map(i=>i.fileId).filter(Boolean));
       const have=new Set(await fkeys());
       for(const x of files)if(used.has(x.id)&&!have.has(x.id))await putFile(x);
       for(const k of await fkeys())if(!used.has(k))await fdel(k);
       state=ns;save();resetForm();renderAll();await refreshFiles();
-      alert('Đã gộp xong:\n• Thêm mới: '+s.added+' hoạt động\n• Cập nhật bản mới hơn: '+s.updated+'\n• Xóa theo máy kia: '+s.removed+'\n• Bỏ qua do trùng nội dung: '+s.dup+await fileReport(state.items)+'\nHồ sơ và hệ số quy đổi giữ theo máy này (chỉ điền chỗ trống).');
+      alert('Đã gộp xong:\n• Thêm mới: '+s.added+' hoạt động\n• Cập nhật bản mới hơn: '+s.updated+'\n• Xóa theo máy kia: '+s.removed+'\n• Bỏ qua do trùng nội dung: '+s.dup+'\n• Hồ sơ quan trọng: thêm '+s.docs.added+', cập nhật '+s.docs.updated+', xóa '+s.docs.removed+', bỏ qua do trùng '+s.docs.dup+await fileReport(state.items.concat(state.docs))+'\nHồ sơ và hệ số quy đổi giữ theo máy này (chỉ điền chỗ trống).');
     }
   }catch(err){alert('Lỗi: '+(err&&err.message||err))}
 };
@@ -802,14 +1025,112 @@ async function openViewer(it){
 }
 $('#vClose').onclick=closeViewer;
 $('#viewer').addEventListener('click',e=>{if(e.target.id==='viewer')closeViewer()});
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeViewer()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeViewer();closeDoc()}});
 
+/* ---------- Hồ sơ quan trọng (chứng chỉ hành nghề, bằng cấp…) ---------- */
+const DOC_KINDS=[
+  {id:'license',name:'Chứng chỉ hành nghề',ph:'VD: Chứng chỉ hành nghề, giấy phép hành nghề'},
+  {id:'degree',name:'Bằng cấp',ph:'VD: Bằng Cử nhân Xét nghiệm y học, Bác sĩ đa khoa'},
+  {id:'spec',name:'Chứng chỉ chuyên môn',ph:'VD: Chứng chỉ định hướng chuyên khoa, chuyên khoa I'},
+  {id:'other',name:'Hồ sơ khác',ph:'VD: Chứng nhận BLS, giấy phép sử dụng thiết bị'}
+];
+const dk=id=>DOC_KINDS.find(k=>k.id===id)||DOC_KINDS[DOC_KINDS.length-1];
+function vstat(v){
+  const t=pd(v),today=new Date();today.setHours(0,0,0,0);
+  const d=Math.round((t-today)/864e5);
+  if(d<0)return{c:'bad',d,t:'Đã hết hạn ngày '+fmt(t)};
+  if(d<=90)return{c:'warn',d,t:'Còn '+d+' ngày, hết hạn '+fmt(t)};
+  return{c:'ok',d,t:'Còn hạn đến '+fmt(t)};
+}
+function renderDocs(){
+  const ord=id=>{const k=DOC_KINDS.findIndex(k=>k.id===id);return k<0?9:k};
+  const docs=state.docs.slice().sort((a,b)=>ord(a.kind)-ord(b.kind)||(b.issueDate||'').localeCompare(a.issueDate||''));
+  const wb=s=>esc(s).replace(/\//g,'/<wbr>');
+  const bad=docs.filter(d=>d.validUntil&&vstat(d.validUntil).d<=90);
+  $('#docsAlert').innerHTML=bad.length?'<div class="alert '+(bad.some(d=>vstat(d.validUntil).d<0)?'bad':'warn')+'">'+bad.length+' hồ sơ đã hết hạn hoặc sắp hết hạn (trong 90 ngày): '+bad.map(d=>esc(d.title)).join('; ')+'.</div>':'';
+  if(!docs.length){
+    $('#docsList').innerHTML='<div class="docs-empty">Chưa có hồ sơ nào. Hãy thêm chứng chỉ hành nghề và bằng cấp để xem nhanh khi cần.<div class="row"><button type="button" class="sm" data-newkind="license">+ Chứng chỉ hành nghề</button><button type="button" class="sm" data-newkind="degree">+ Bằng cấp</button><button type="button" class="sm" data-newkind="spec">+ Chứng chỉ chuyên môn</button></div></div>';
+    return;
+  }
+  $('#docsList').innerHTML=docs.map(d=>{
+    const vs=d.validUntil?vstat(d.validUntil):null;
+    const miss=d.fileId&&haveFiles&&!haveFiles.has(d.fileId);
+    const rows=[d.number?'<span>Số: <b>'+wb(d.number)+'</b></span>':'',d.issuer?'<span>Nơi cấp: '+esc(d.issuer)+'</span>':'',d.issueDate?'<span>Ngày cấp: '+fmt(pd(d.issueDate))+'</span>':'',d.note?'<span>'+esc(d.note)+'</span>':''].join('');
+    const st=vs?'<span class="st st-'+vs.c+'">'+vs.t+'</span>':'<span class="st st-na">Không ghi thời hạn</span>';
+    const view=!d.fileId?'<span class="tag">chưa đính kèm</span>':miss?'<span class="tag warn">thiếu file, bấm Sửa để đính kèm lại</span>':'<button type="button" class="pri" data-act="view" data-id="'+d.id+'">Xem bản scan</button>';
+    return '<div class="doc k-'+esc(d.kind)+'"><div class="doc-k">'+esc(dk(d.kind).name)+'</div><div class="doc-t">'+esc(d.title)+'</div><div class="doc-m">'+rows+'</div>'+st
+      +'<div class="doc-act">'+view+'<button type="button" class="sm" data-act="edit" data-id="'+d.id+'">Sửa</button><button type="button" class="sm del" data-act="del" data-id="'+d.id+'">Xóa</button></div></div>';
+  }).join('');
+}
+let docEdit=null,dKind='license',dThumb=null;
+function dKindChips(){
+  $('#dKindChips').innerHTML=DOC_KINDS.map(k=>'<button type="button" class="chip'+(k.id===dKind?' on':'')+'" aria-pressed="'+(k.id===dKind)+'" data-k="'+k.id+'">'+esc(k.name)+'</button>').join('');
+  $('#dTitle').placeholder=dk(dKind).ph;
+}
+$('#dKindChips').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;dKind=b.dataset.k;dKindChips()};
+function updateDocFile(){
+  const f=$('#dFile').files&&$('#dFile').files[0],main=$('#dDropMain'),sub=$('#dDropSub'),th=$('#dDropThumb'),z=$('#dDrop');
+  if(dThumb){URL.revokeObjectURL(dThumb);dThumb=null}
+  th.innerHTML='';
+  if(f){
+    z.classList.add('has');main.textContent=f.name;
+    sub.textContent=fmtSize(f.size)+(f.size>8*1048576?'. Quá lớn, tối đa 8 MB':'. Bấm để đổi file');
+    if(/^image\//.test(f.type)){dThumb=URL.createObjectURL(f);const im=document.createElement('img');im.src=dThumb;im.alt='';th.appendChild(im)}else th.textContent='PDF';
+    return;
+  }
+  const old=docEdit&&state.docs.find(d=>d.id===docEdit);
+  if(old&&old.fileName){z.classList.add('has');main.textContent='Đã đính kèm: '+old.fileName;sub.textContent='Bấm để chọn file mới thay thế';th.textContent=/\.pdf$/i.test(old.fileName)?'PDF':'Ảnh'}
+  else{z.classList.remove('has');main.textContent='Chọn ảnh hoặc PDF';sub.textContent='Giấy tờ hai mặt nên gộp thành một file PDF. Tối đa 8 MB'}
+}
+$('#dFile').addEventListener('change',updateDocFile);
+function openDoc(d,kind){
+  docEdit=d?d.id:null;dKind=d?d.kind:(kind||'license');
+  $('#docForm').reset();
+  $('#dTitle').value=d?d.title:'';$('#dNum').value=d?d.number||'':'';$('#dIssuer').value=d?d.issuer||'':'';
+  $('#dIssue').value=d?d.issueDate||'':'';$('#dValid').value=d?d.validUntil||'':'';$('#dNote').value=d?d.note||'':'';
+  $('#docFormTitle').textContent=d?'Sửa hồ sơ quan trọng':'Thêm hồ sơ quan trọng';$('#dSubmit').textContent=d?'Cập nhật':'Lưu hồ sơ';
+  dKindChips();updateDocFile();$('#docModal').classList.remove('hide');
+}
+function closeDoc(){$('#docModal').classList.add('hide');docEdit=null}
+$('#docAdd').onclick=()=>openDoc(null);
+$('#dClose').onclick=closeDoc;$('#dCancel').onclick=closeDoc;
+$('#docForm').onsubmit=async e=>{
+  e.preventDefault();
+  const file=$('#dFile').files[0];
+  if(file&&file.size>8*1048576){alert('File quá lớn (tối đa 8 MB).');return}
+  const issue=$('#dIssue').value,valid=$('#dValid').value;
+  if(issue&&valid&&valid<issue){alert('“Có giá trị đến” phải sau hoặc bằng ngày cấp.');return}
+  const old=docEdit?state.docs.find(d=>d.id===docEdit):null;
+  const d={id:old?old.id:uid(),kind:dKind,title:$('#dTitle').value.trim(),number:$('#dNum').value.trim(),issuer:$('#dIssuer').value.trim(),issueDate:issue,validUntil:valid,note:$('#dNote').value.trim(),
+    fileId:old?old.fileId:null,fileName:old?old.fileName:null,updatedAt:Date.now()};
+  if(file){
+    const oldFile=d.fileId,newId=uid();
+    try{await fput({id:newId,name:file.name,type:file.type,buf:await readBuf(file)})}
+    catch(err){alert('Không lưu được file đính kèm: '+(err&&err.message||err)+'\nHồ sơ chưa được lưu. Hãy thử lại hoặc chọn file nhỏ hơn.');return}
+    d.fileId=newId;d.fileName=file.name;
+    if(oldFile)try{await fdel(oldFile)}catch(_){}
+  }
+  if(old)Object.assign(old,d);else state.docs.push(d);
+  save();closeDoc();renderDocs();renderBk();refreshFiles();
+};
+$('#docsList').onclick=async e=>{
+  const nb=e.target.closest('button[data-newkind]');if(nb){openDoc(null,nb.dataset.newkind);return}
+  const b=e.target.closest('button[data-act]');if(!b)return;
+  const d=state.docs.find(x=>x.id===b.dataset.id);if(!d)return;
+  if(b.dataset.act==='view')openViewer(d);
+  else if(b.dataset.act==='edit')openDoc(d);
+  else if(b.dataset.act==='del'){
+    if(!confirm('Xóa hồ sơ "'+d.title+'" và bản scan đính kèm?'))return;
+    if(d.fileId)try{await fdel(d.fileId)}catch(_){}
+    state.docs=state.docs.filter(x=>x!==d);state.deleted[d.id]=Date.now();save();renderDocs();renderBk();
+  }
+};
 /* ---------- Cảnh báo sao lưu, điều hướng, ngoại tuyến, cài đặt ứng dụng ---------- */
 function renderBk(){
   const last=state.meta&&state.meta.lastBackup;
   let html='',info='Bạn chưa từng xuất sao lưu JSON trên thiết bị này.';
   if(last){const d=new Date(last);info='Sao lưu JSON gần nhất: '+fmt(d)+' '+d.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'})}
-  if(state.items.length){
+  if(state.items.length||state.docs.length){
     const days=last?Math.floor((Date.now()-new Date(last))/864e5):null;
     if(!last)html='<div class="alert bad">Bạn đã nhập dữ liệu nhưng <b>chưa sao lưu lần nào</b>. Hãy vào mục <a href="#backupCard">Sao lưu</a> và bấm “Xuất sao lưu (JSON)”.</div>';
     else if(days>=30)html='<div class="alert warn">Lần sao lưu gần nhất cách đây <b>'+days+' ngày</b>. Nên sao lưu lại tại mục <a href="#backupCard">Sao lưu</a>.</div>';
