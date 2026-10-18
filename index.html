@@ -19,22 +19,27 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="CME Tracker">
 <style>
-:root{--bg:#f6f7f9;--card:#fff;--tx:#1b2430;--mut:#6b7686;--bd:#dde2e9;--pri:#0f6fde;--ok:#1a9d57;--warn:#d98a00;--bad:#d8392f}
-@media (prefers-color-scheme:dark){:root{--bg:#12161c;--card:#1b222b;--tx:#e8edf3;--mut:#93a0b1;--bd:#2c3743;--pri:#4b9bff;--ok:#3ec27c;--warn:#f0b13a;--bad:#ff6a5f}}
+:root{--bg:#f3f5f8;--card:#fff;--tx:#14202e;--mut:#5b6879;--bd:#dbe1e9;--pri:#0f6fde;--ok:#14803f;--warn:#b86e00;--bad:#d03227;--field:#fff;--fbd:#aeb9c7;--pri-soft:rgba(15,111,222,.09);--ring:rgba(15,111,222,.26)}
+@media (prefers-color-scheme:dark){:root{--bg:#0f141a;--card:#18202a;--tx:#e8edf3;--mut:#9aa7b8;--bd:#2a3541;--pri:#4b9bff;--ok:#3ec27c;--warn:#f0b13a;--bad:#ff7a70;--field:#0f151c;--fbd:#475565;--pri-soft:rgba(75,155,255,.14);--ring:rgba(75,155,255,.38)}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 .wrap{max-width:1080px;margin:0 auto;padding:16px}
 h1{font-size:22px;margin:8px 0 2px}h2{font-size:16px;margin:0 0 12px}
 .sub{color:var(--mut);margin:0 0 16px}
-.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:16px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:16px;box-shadow:0 1px 2px rgba(20,32,46,.04)}
 .grid{display:grid;gap:12px}
 .g2{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
-label{display:block;font-size:13px;color:var(--mut);margin-bottom:4px}
-input,select,textarea{width:100%;padding:8px 10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit}
-textarea{min-height:60px;resize:vertical}
-button{padding:8px 14px;border-radius:8px;border:1px solid var(--bd);background:var(--card);color:var(--tx);font:inherit;cursor:pointer}
+label,.lbl{display:block;font-size:13.5px;font-weight:600;color:var(--tx);line-height:1.3;margin:0 0 4px;text-wrap:balance}
+.req{color:var(--bad);margin-left:2px}
+input,select,textarea{width:100%;min-height:44px;padding:10px 12px;border:1.5px solid var(--fbd);border-radius:10px;background:var(--field);color:var(--tx);font:inherit;font-size:16px;line-height:1.4}
+textarea{min-height:64px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--pri);box-shadow:0 0 0 4px var(--ring)}
+input::placeholder,textarea::placeholder{color:var(--mut);opacity:.7}
+input[readonly]{background:var(--pri-soft);border-color:transparent;font-weight:700}
+button{min-height:40px;padding:8px 14px;border-radius:10px;border:1.5px solid var(--fbd);background:var(--card);color:var(--tx);font:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--pri);outline-offset:2px}
 button.pri{background:var(--pri);border-color:var(--pri);color:#fff}
-button.sm{padding:3px 9px;font-size:13px}
+button.sm{min-height:32px;padding:3px 10px;font-size:13px;border-radius:8px}
 button.del{color:var(--bad)}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .stat{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:12px}
@@ -54,8 +59,8 @@ tr.out{opacity:.5}
 .num{text-align:right;white-space:nowrap}
 .tag{font-size:11px;padding:1px 6px;border-radius:6px;background:var(--bg);border:1px solid var(--bd);color:var(--mut)}
 .yr{display:grid;grid-template-columns:150px 1fr 60px;gap:8px;align-items:center;font-size:13px;margin:4px 0}
-.hint{font-size:12px;color:var(--mut);margin-top:6px}
-.hide{display:none}
+.hint{font-size:12.5px;color:var(--mut);margin-top:6px;text-wrap:pretty;overflow-wrap:anywhere}
+.hide{display:none!important}
 footer{text-align:center;color:var(--mut);font-size:12.5px;padding:8px 0 24px}
 footer b{color:var(--tx)}
 html{scroll-behavior:smooth;scroll-padding-top:56px}
@@ -71,14 +76,70 @@ details.card li{margin:5px 0}
 details.card h3{font-size:14px;margin:14px 0 6px}
 #bkWarn .alert{margin:0 0 16px}
 .net-off{color:var(--warn);border-color:var(--warn)}
-fieldset.grp{border:1px solid var(--bd);border-radius:10px;margin:0 0 14px;padding:12px}
-fieldset.grp legend{font-size:13px;font-weight:600;padding:0 6px;color:var(--mut)}
-.span2{grid-column:1/-1}
-.seg{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
-.seg label.opt{display:flex;align-items:center;gap:6px;margin:0;padding:6px 12px;border:1px solid var(--bd);border-radius:999px;color:var(--tx);cursor:pointer;font-size:14px}
-.seg input{width:auto}
+.form-card{padding:0;border-top:3px solid var(--pri)}
+.form-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:20px 22px 8px}
+.form-head h2{font-size:21px;margin:0 0 4px;letter-spacing:-.01em;text-wrap:balance}
+.form-sub{margin:0;color:var(--mut);font-size:14px;text-wrap:pretty}
+.step{padding:18px 22px 6px;border-top:1px solid var(--bd)}
+.step:first-of-type{border-top:0}
+.step-h{display:flex;gap:12px;align-items:flex-start;margin-bottom:16px}
+.step-n{flex:none;width:28px;height:28px;margin-top:-1px;border-radius:50%;background:var(--pri);color:#fff;font-weight:700;font-size:14px;display:grid;place-items:center}
+.step-h h3{margin:0;font-size:16px}
+.step-h p{margin:2px 0 0;font-size:13px;color:var(--mut);text-wrap:balance}
+.fld{display:flex;flex-direction:column;min-width:0;margin-bottom:16px}
+.fld small{margin-top:5px;font-size:12.5px;color:var(--mut);line-height:1.35;text-wrap:pretty}
+.row-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:0 14px;align-items:start}
+.row-grid>.fld{grid-column:span 12}
+@media(min-width:480px){.row-grid>.c3,.row-grid>.c4{grid-column:span 6}}
+@media(min-width:760px){.row-grid>.c3{grid-column:span 3}.row-grid>.c4{grid-column:span 4}.row-grid>.c6{grid-column:span 6}}
+.fld-main label{font-size:15px}
+.fld-main textarea{font-size:18px;font-weight:600;line-height:1.4;min-height:84px;padding:12px 14px;border-width:2px;resize:none;overflow:hidden}
+.linkbtn{align-self:flex-start;min-height:0;margin-top:6px;padding:2px 0;border:0;background:none;color:var(--pri);font-size:13px;text-decoration:underline;text-underline-offset:3px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{min-height:40px;padding:8px 14px;border-radius:999px;border:1.5px solid var(--fbd);background:var(--field);font-size:14.5px;line-height:1.2;text-align:left}
+.chip.on{background:var(--pri);border-color:var(--pri);color:#fff;font-weight:600}
+.seg{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin-bottom:16px}
+.seg .opt{display:flex;align-items:center;gap:10px;margin:0;padding:10px 14px;border:1.5px solid var(--fbd);border-radius:12px;background:var(--field);cursor:pointer}
+.seg .opt span{display:flex;flex-direction:column;gap:1px;font-weight:600;font-size:14.5px}
+.seg .opt em{font-style:normal;font-weight:400;color:var(--mut);font-size:12.5px}
+.seg .opt:has(input:checked){border-color:var(--pri);background:var(--pri-soft)}
+.seg .opt:focus-within{box-shadow:0 0 0 4px var(--ring)}
+.seg input{flex:none;width:18px;height:18px;min-height:0;accent-color:var(--pri)}
+.unit{position:relative}
+.unit input{padding-right:96px}
+.unit span{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--mut);font-size:13.5px;pointer-events:none}
+#fCredIn{font-size:20px;font-weight:700}
+.drop{display:flex;align-items:center;gap:14px;margin:0;padding:12px 14px;border:2px dashed var(--fbd);border-radius:12px;background:var(--field);cursor:pointer;font-weight:400}
+.drop:hover,.drop:focus-within{border-color:var(--pri);background:var(--pri-soft)}
+.drop.has{border-style:solid;border-color:var(--pri)}
+.drop-thumb{flex:none;width:52px;height:52px;border-radius:8px;background:var(--pri-soft);display:grid;place-items:center;overflow:hidden;color:var(--pri);font-weight:700;font-size:13px}
+.drop-thumb:empty::before{content:"+";font-size:28px;font-weight:400}
+.drop-thumb img{width:100%;height:100%;object-fit:cover}
+.drop-t{min-width:0;display:flex;flex-direction:column;gap:2px}
+.drop-t b{font-size:15px;overflow-wrap:anywhere}
+.drop-t small{margin:0;color:var(--mut);font-size:12.5px}
+.sr{position:absolute;opacity:0;width:1px;height:1px;overflow:hidden;pointer-events:none}
+.form-bar{position:sticky;bottom:0;z-index:4;display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;margin-top:8px;padding:12px 22px calc(12px + env(safe-area-inset-bottom));background:var(--card);border-top:1px solid var(--bd);border-radius:0 0 14px 14px;box-shadow:0 -8px 16px -12px rgba(20,32,46,.3)}
+.pv{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 16px;font-size:14px;min-width:0}
+.pv-n{font-size:22px;font-variant-numeric:tabular-nums}
+.pv .muted{color:var(--mut)}.pv .ok{color:var(--ok);font-weight:600}.pv .warnc{color:var(--warn);font-weight:600}
+button.pri.big{min-height:46px;padding:0 26px;font-size:16px;font-weight:600}
+@media(max-width:600px){.form-head,.step,.form-bar{padding-left:16px;padding-right:16px}.form-bar>.row{width:100%}.form-bar button.big{flex:1}.fld-main textarea{font-size:17px}}
+.tbl td.c-main b{display:block;overflow-wrap:anywhere;text-wrap:pretty}
+.tbl td.c-main .meta{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;margin-top:4px;font-size:12.5px;color:var(--mut)}
+.tbl td.c-cert{max-width:260px}
+@media(max-width:720px){
+  .tbl{overflow:visible}
+  table,tbody{display:block}
+  thead{display:none}
+  tbody tr{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"main cred" "date cred" "cert cert" "act act";gap:2px 14px;padding:14px 0;border-bottom:1px solid var(--bd)}
+  tbody td{display:block;border:0;padding:2px 0}
+  td.c-cred .hint{display:none}td.c-cred b::after{content:" giờ";font-weight:500;color:var(--mut);font-size:12.5px}
+  td.c-main{grid-area:main}td.c-cred{grid-area:cred;white-space:nowrap}td.c-date{grid-area:date;color:var(--mut);font-size:13px}td.c-cert{grid-area:cert;max-width:none}td.c-act{grid-area:act;text-align:left;padding-top:8px}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.bar i{transition:none}}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:50;padding:12px}
-.modal.hide{display:none}
+.modal.hide{display:none!important}
 .modal-box{background:var(--card);color:var(--tx);border-radius:12px;padding:14px;width:min(900px,100%);max-height:92vh;overflow:auto}
 .modal-box img{max-width:100%;max-height:65vh;display:block;margin:10px auto}
 .modal-box iframe{width:100%;height:65vh;border:1px solid var(--bd);border-radius:8px;margin-top:10px}
@@ -156,57 +217,80 @@ fieldset.grp legend{font-size:13px;font-weight:600;padding:0 6px;color:var(--mut
 
   <div class="card" id="dash"></div>
 
-  <div class="card" id="addForm">
-    <h2 id="formTitle">Thêm hoạt động CME</h2>
+  <section class="card form-card" id="addForm" aria-labelledby="formTitle">
+    <header class="form-head">
+      <div>
+        <h2 id="formTitle">Thêm hoạt động CME</h2>
+        <p class="form-sub">Nhập theo giấy chứng nhận, từ trên xuống dưới. Ô có dấu <span class="req" aria-hidden="true">*</span> là bắt buộc.</p>
+      </div>
+      <span id="editBadge" class="tag hide">Đang sửa</span>
+    </header>
     <form id="f">
-      <fieldset class="grp">
-        <legend>1. Hoạt động cập nhật kiến thức</legend>
-        <div class="grid g2">
-          <div class="span2"><label>Nội dung / chủ đề *</label><input id="fTitle" required placeholder="VD: Tiếp cận kỹ thuật xét nghiệm mới trong chẩn đoán và điều trị"></div>
-          <div><label>Hình thức *</label><select id="fType"></select></div>
-          <div><label>Đơn vị / cá nhân chịu trách nhiệm tổ chức</label><input id="fOrg" list="dlOrg" placeholder="VD: Khoa Xét nghiệm, Bệnh viện …"></div>
-          <div><label>Ngày tham dự (hoặc ngày bắt đầu) *</label><input id="fDate" type="date" required></div>
-          <div><label>Đến ngày (nếu kéo dài nhiều ngày)</label><input id="fDateEnd" type="date"></div>
+      <section class="step" aria-labelledby="s1">
+        <div class="step-h"><span class="step-n" aria-hidden="true">1</span><div><h3 id="s1">Hoạt động</h3><p>Nội dung, hình thức và thời gian ghi trên chứng nhận</p></div></div>
+        <div class="fld fld-main">
+          <label for="fTitle">Nội dung / chủ đề <span class="req" aria-hidden="true">*</span></label>
+          <textarea id="fTitle" rows="2" required placeholder="VD: Tiếp cận kỹ thuật xét nghiệm mới trong chẩn đoán và điều trị"></textarea>
+          <button type="button" id="fCaseFix" class="linkbtn hide">Chữ đang in hoa toàn bộ. Đổi sang chữ thường?</button>
         </div>
-        <div class="hint">Hoạt động nhiều ngày được tính vào chu kỳ theo ngày kết thúc.</div>
-      </fieldset>
+        <div class="fld">
+          <span class="lbl" id="lblType">Hình thức <span class="req" aria-hidden="true">*</span></span>
+          <div id="fTypeChips" class="chips" role="group" aria-labelledby="lblType"></div>
+          <select id="fType" class="hide" tabindex="-1" aria-hidden="true"></select>
+        </div>
+        <div class="row-grid">
+          <div class="fld c6"><label for="fOrg">Đơn vị tổ chức</label><input id="fOrg" list="dlOrg" placeholder="VD: Khoa Xét nghiệm, Bệnh viện…"><small>Đơn vị hoặc cá nhân chịu trách nhiệm</small></div>
+          <div class="fld c3"><label for="fDate">Ngày tham dự <span class="req" aria-hidden="true">*</span></label><input id="fDate" type="date" required></div>
+          <div class="fld c3"><label for="fDateEnd">Đến ngày</label><input id="fDateEnd" type="date"><small>Nếu kéo dài nhiều ngày</small></div>
+        </div>
+      </section>
 
-      <fieldset class="grp">
-        <legend>2. Giờ tín chỉ</legend>
-        <div class="seg" role="radiogroup" aria-label="Cách xác định giờ tín chỉ">
-          <label class="opt"><input type="radio" name="fMode" value="cert" checked> Theo chứng nhận (khuyên dùng)</label>
-          <label class="opt"><input type="radio" name="fMode" value="calc"> Tự tính: số tiết × hệ số</label>
+      <section class="step" aria-labelledby="s2">
+        <div class="step-h"><span class="step-n" aria-hidden="true">2</span><div><h3 id="s2">Giờ tín chỉ</h3><p>Ưu tiên số ghi ở dòng “Quy đổi tương đương”</p></div></div>
+        <div class="seg" role="radiogroup" aria-labelledby="s2">
+          <label class="opt"><input type="radio" name="fMode" value="cert" checked><span>Theo chứng nhận<em>Khuyên dùng</em></span></label>
+          <label class="opt"><input type="radio" name="fMode" value="calc"><span>Tự tính<em>Số tiết × hệ số</em></span></label>
         </div>
-        <div class="grid g2" id="boxCert">
-          <div><label>Số giờ tín chỉ ghi trên chứng nhận *</label><input id="fCredIn" type="number" min="0" step="0.25" inputmode="decimal" placeholder="VD: 3"></div>
+        <div id="boxCert" class="row-grid">
+          <div class="fld c4"><label for="fCredIn">Số giờ ghi trên chứng nhận <span class="req" aria-hidden="true">*</span></label><div class="unit"><input id="fCredIn" type="number" min="0" step="0.25" inputmode="decimal" placeholder="3"><span>giờ tín chỉ</span></div></div>
         </div>
-        <div class="grid g2 hide" id="boxCalc">
-          <div><label>Số tiết / giờ thực tế *</label><input id="fAmt" type="number" min="0" step="0.25" inputmode="decimal"></div>
-          <div><label>Hệ số quy đổi</label><input id="fFac" type="number" min="0" step="0.01" inputmode="decimal"></div>
-          <div><label>Giờ tín chỉ (tự tính)</label><input id="fCred" readonly></div>
+        <div id="boxCalc" class="row-grid hide">
+          <div class="fld c4"><label for="fAmt">Số tiết thực tế <span class="req" aria-hidden="true">*</span></label><div class="unit"><input id="fAmt" type="number" min="0" step="0.25" inputmode="decimal"><span>tiết</span></div></div>
+          <div class="fld c4"><label for="fFac">Hệ số quy đổi</label><input id="fFac" type="number" min="0" step="0.01" inputmode="decimal"><small>Đối chiếu Phụ lục I Thông tư 32/2023</small></div>
+          <div class="fld c4"><label for="fCred">Giờ tín chỉ</label><div class="unit"><input id="fCred" readonly><span>giờ</span></div></div>
         </div>
-        <div class="hint">Đơn vị cấp thường ghi sẵn ở dòng “Quy đổi tương đương”; hãy nhập đúng số đó. Chỉ chọn “Tự tính” khi chứng nhận không ghi giờ tín chỉ.</div>
-      </fieldset>
+      </section>
 
-      <fieldset class="grp">
-        <legend>3. Chứng nhận</legend>
-        <div class="grid g2">
-          <div><label>Đơn vị cấp chứng nhận</label><input id="fIssuer" list="dlIssuer" placeholder="VD: Đại học Y Dược TP. Hồ Chí Minh"></div>
-          <div><label>Số chứng nhận</label><input id="fCert" placeholder="VD: 123456/A001/GCN-ABC"></div>
-          <div><label>Số lưu sổ</label><input id="fReg" placeholder="VD: 1234/2026-ABC"></div>
-          <div><label>Ngày cấp chứng nhận</label><input id="fIssue" type="date"></div>
-          <div><label>Mã cơ sở cập nhật kiến thức y khoa liên tục (nếu có)</label><input id="fCode"></div>
-          <div><label>Đính kèm bản scan (PDF/ảnh, ≤ 8 MB)</label><input id="fFile" type="file" accept="application/pdf,image/*"></div>
+      <section class="step" aria-labelledby="s3">
+        <div class="step-h"><span class="step-n" aria-hidden="true">3</span><div><h3 id="s3">Chứng nhận</h3><p>Nơi cấp và bản scan để đối chiếu khi cần</p></div></div>
+        <div class="row-grid">
+          <div class="fld c6"><label for="fIssuer">Đơn vị cấp chứng nhận</label><input id="fIssuer" list="dlIssuer" placeholder="VD: Đại học Y Dược TP. Hồ Chí Minh"></div>
+          <div class="fld c6"><label for="fCert">Số chứng nhận</label><input id="fCert" placeholder="VD: 123456/A001/GCN-ABC"></div>
+          <div class="fld c4"><label for="fReg">Số lưu sổ</label><input id="fReg" placeholder="VD: 1234/2026-ABC"></div>
+          <div class="fld c4"><label for="fIssue">Ngày cấp</label><input id="fIssue" type="date"></div>
+          <div class="fld c4"><label for="fCode">Mã cơ sở CME</label><input id="fCode"><small>Nếu có trên chứng nhận</small></div>
         </div>
-      </fieldset>
+        <div class="fld">
+          <span class="lbl">Bản scan chứng nhận</span>
+          <label class="drop" for="fFile" id="dropZone">
+            <input id="fFile" type="file" accept="application/pdf,image/*" class="sr">
+            <span class="drop-thumb" id="dropThumb" aria-hidden="true"></span>
+            <span class="drop-t"><b id="dropMain">Chọn ảnh hoặc PDF chứng nhận</b><small id="dropSub">Chụp trực tiếp hoặc chọn từ máy, tối đa 8 MB</small></span>
+          </label>
+        </div>
+        <div class="fld"><label for="fNote">Ghi chú</label><textarea id="fNote" rows="2"></textarea></div>
+      </section>
       <datalist id="dlIssuer"></datalist><datalist id="dlOrg"></datalist>
-      <div><label>Ghi chú</label><textarea id="fNote"></textarea></div>
-      <div class="row" style="margin-top:12px">
-        <button class="pri" type="submit" id="fSubmit">Lưu hoạt động</button>
-        <button type="button" id="fCancel" class="hide">Hủy sửa</button>
+
+      <div class="form-bar">
+        <div class="pv" id="pv" aria-live="polite"></div>
+        <div class="row">
+          <button type="button" id="fCancel" class="hide">Hủy sửa</button>
+          <button class="pri big" type="submit" id="fSubmit">Lưu hoạt động</button>
+        </div>
       </div>
     </form>
-  </div>
+  </section>
 
   <div class="card" id="listCard">
     <div class="row" style="justify-content:space-between;margin-bottom:10px">
@@ -348,12 +432,15 @@ function renderTable(){
     const when=fmt(pd(i.date))+(i.dateEnd&&i.dateEnd!==i.date?' – '+fmt(pd(i.dateEnd)):'');
     const how=calc?'tự tính: '+num(i.amount)+' × '+num(i.factor):'theo chứng nhận';
     const miss=i.fileId&&haveFiles&&!haveFiles.has(i.fileId);
-    const cert=[i.issuer?esc(i.issuer):'',i.certNo?'Số '+esc(i.certNo):'',i.regNo?'Lưu số '+esc(i.regNo):'',i.issueDate?'Cấp '+fmt(pd(i.issueDate)):''].filter(Boolean).join('<br>');
-    return '<tr class="'+(out?'out':'')+'"><td>'+when+(out?'<br><span class="tag">ngoài chu kỳ</span>':'')+'</td>'
-     +'<td><b>'+esc(i.title)+'</b><br><span class="hint">'+esc(tn(i.typeId))+(i.org?' · '+esc(i.org):'')+(i.orgCode?' · Mã '+esc(i.orgCode):'')+(i.note?' · '+esc(i.note):'')+'</span></td>'
-     +'<td class="num"><b>'+num(i.credits)+'</b><br><span class="hint">'+how+'</span></td>'
-     +'<td><span class="hint">'+cert+'</span>'+(i.fileId?'<br>'+(miss?'<span class="tag warn">thiếu file – hãy bấm Sửa để đính kèm lại</span>':'<button class="sm" data-act="view" data-id="'+i.id+'">Xem file</button>'):'')+'</td>'
-     +'<td class="num"><button class="sm" data-act="edit" data-id="'+i.id+'">Sửa</button> <button class="sm del" data-act="del" data-id="'+i.id+'">Xóa</button></td></tr>';
+    const wb=s=>esc(s).replace(/\//g,'/<wbr>');
+    const cert=[i.issuer?esc(i.issuer):'',i.certNo?'Số '+wb(i.certNo):'',i.regNo?'Lưu số '+wb(i.regNo):'',i.issueDate?'Cấp '+fmt(pd(i.issueDate)):''].filter(Boolean).join('<br>');
+    const meta='<span class="tag">'+esc(tn(i.typeId))+'</span>'+(i.org?'<span>'+esc(i.org)+'</span>':'')+(i.orgCode?'<span>Mã '+esc(i.orgCode)+'</span>':'')+(i.note?'<span>'+esc(i.note)+'</span>':'');
+    const fileBit=i.fileId?'<div style="margin-top:6px">'+(miss?'<span class="tag warn">thiếu file – bấm Sửa để đính kèm lại</span>':'<button class="sm" data-act="view" data-id="'+i.id+'">Xem file</button>')+'</div>':'';
+    return '<tr class="'+(out?'out':'')+'"><td class="c-date">'+when+(out?'<br><span class="tag">ngoài chu kỳ</span>':'')+'</td>'
+     +'<td class="c-main"><b>'+esc(i.title)+'</b><span class="meta">'+meta+'</span></td>'
+     +'<td class="c-cred num"><b>'+num(i.credits)+'</b><br><span class="hint">'+how+'</span></td>'
+     +'<td class="c-cert"><span class="hint">'+cert+'</span>'+fileBit+'</td>'
+     +'<td class="c-act num"><button class="sm" data-act="edit" data-id="'+i.id+'">Sửa</button> <button class="sm del" data-act="del" data-id="'+i.id+'">Xóa</button></td></tr>';
   }).join(''):'<tr><td colspan="5" class="hint">Chưa có hoạt động nào.</td></tr>';
 }
 function renderTypes(){
@@ -361,6 +448,7 @@ function renderTypes(){
   const cur=$('#fType').value;
   $('#fType').innerHTML=state.types.map(t=>'<option value="'+t.id+'">'+esc(t.name)+'</option>').join('');
   if(cur&&state.types.some(t=>t.id===cur))$('#fType').value=cur;
+  syncChips();
 }
 function renderAll(){
   $('#pName').value=state.profile.name||'';$('#pLic').value=state.profile.license||'';
@@ -379,6 +467,7 @@ function setMode(m){
   $('#boxCert').classList.toggle('hide',m!=='cert');$('#boxCalc').classList.toggle('hide',m!=='calc');
   $('#fCredIn').required=(m==='cert');$('#fAmt').required=(m==='calc');
   if(m==='calc')syncFactor();
+  updatePreview();
 }
 document.querySelectorAll('input[name=fMode]').forEach(r=>r.onchange=()=>setMode(r.value));
 function renderLists(){
@@ -386,8 +475,8 @@ function renderLists(){
   $('#dlIssuer').innerHTML=uniq('issuer').map(v=>'<option value="'+esc(v)+'">').join('');
   $('#dlOrg').innerHTML=uniq('org').map(v=>'<option value="'+esc(v)+'">').join('');
 }
-function resetForm(){editId=null;$('#f').reset();$('#formTitle').textContent='Thêm hoạt động CME';$('#fSubmit').textContent='Lưu hoạt động';$('#fCancel').classList.add('hide');$('#fType').value=state.types[0]?state.types[0].id:'';setMode('cert');syncFactor();renderLists()}
-$('#fType').onchange=()=>{const t=state.types.find(t=>t.id===$('#fType').value);if(t)$('#fFac').value=t.factor;calcCred()};
+function resetForm(){editId=null;$('#f').reset();$('#formTitle').textContent='Thêm hoạt động CME';$('#fSubmit').textContent='Lưu hoạt động';$('#fCancel').classList.add('hide');$('#editBadge').classList.add('hide');$('#fType').value=state.types[0]?state.types[0].id:'';setMode('cert');syncFactor();renderLists();syncChips();fitTitle();caseHint();updateFileZone();updatePreview()}
+$('#fType').onchange=()=>{const t=state.types.find(t=>t.id===$('#fType').value);if(t)$('#fFac').value=t.factor;calcCred();syncChips();updatePreview()};
 $('#fAmt').oninput=calcCred;$('#fFac').oninput=calcCred;
 $('#fCancel').onclick=resetForm;
 $('#f').onsubmit=async e=>{
@@ -430,8 +519,9 @@ $('#tb').onclick=async e=>{
     $('#fType').value=it.typeId;$('#fIssuer').value=it.issuer||'';$('#fCert').value=it.certNo||'';$('#fReg').value=it.regNo||'';$('#fIssue').value=it.issueDate||'';$('#fNote').value=it.note||'';
     setMode(calc?'calc':'cert');
     $('#fCredIn').value=calc?'':it.credits;$('#fAmt').value=calc?(it.amount==null?'':it.amount):'';$('#fFac').value=calc?(it.factor==null?'':it.factor):'';
-    $('#fFile').value='';calcCred();$('#formTitle').textContent='Sửa hoạt động'+(it.fileName?' (đã có file: '+it.fileName+'; chọn file mới để thay)':'');
-    $('#fSubmit').textContent='Cập nhật';$('#fCancel').classList.remove('hide');$('#addForm').scrollIntoView({behavior:'smooth'});
+    $('#fFile').value='';calcCred();$('#formTitle').textContent='Sửa hoạt động';$('#editBadge').classList.remove('hide');
+    $('#fSubmit').textContent='Cập nhật';$('#fCancel').classList.remove('hide');
+    syncChips();fitTitle();caseHint();updateFileZone();updatePreview();$('#addForm').scrollIntoView({behavior:'smooth'});
   }else if(b.dataset.act==='view'){
     openViewer(it);
   }
@@ -440,12 +530,12 @@ $('#q').oninput=e=>{q=e.target.value;renderTable()};
 
 /* ---------- Hồ sơ & hệ số ---------- */
 [['#pName','name'],['#pLic','license'],['#pStart','cycleStart'],['#pReq','required']].forEach(([s,k])=>{
-  $(s).oninput=()=>{state.profile[k]=$(s).value;save();renderDash();renderTable()};
+  $(s).oninput=()=>{state.profile[k]=$(s).value;save();renderDash();renderTable();updatePreview()};
 });
 $('#types').oninput=e=>{
   const t=state.types.find(t=>t.id===e.target.dataset.tid);if(!t)return;
   t[e.target.dataset.f]=e.target.dataset.f==='factor'?Number(e.target.value)||0:e.target.value;save();
-  const cur=$('#fType').value;$('#fType').innerHTML=state.types.map(t=>'<option value="'+t.id+'">'+esc(t.name)+'</option>').join('');$('#fType').value=cur;
+  const cur=$('#fType').value;$('#fType').innerHTML=state.types.map(t=>'<option value="'+t.id+'">'+esc(t.name)+'</option>').join('');$('#fType').value=cur;syncChips();
 };
 $('#types').onclick=e=>{
   const id=e.target.dataset.tdel;if(!id)return;
@@ -453,6 +543,49 @@ $('#types').onclick=e=>{
   state.types=state.types.filter(t=>t.id!==id);save();renderTypes();syncFactor();
 };
 $('#addType').onclick=()=>{state.types.push({id:uid(),name:'Hình thức mới',factor:1});save();renderTypes()};
+
+/* ---------- Biểu mẫu: chọn hình thức, ô nội dung, bản scan, xem trước ---------- */
+function syncChips(){
+  const cur=$('#fType').value;
+  $('#fTypeChips').innerHTML=state.types.map(t=>'<button type="button" class="chip'+(t.id===cur?' on':'')+'" aria-pressed="'+(t.id===cur)+'" data-tid="'+esc(t.id)+'">'+esc(t.name)+'</button>').join('');
+}
+$('#fTypeChips').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;$('#fType').value=b.dataset.tid;$('#fType').onchange()};
+const fT=$('#fTitle');
+function fitTitle(){fT.style.height='auto';fT.style.height=Math.min(fT.scrollHeight+2,240)+'px'}
+function caseHint(){const v=fT.value,n=v.replace(/[^\p{L}]/gu,'').length;$('#fCaseFix').classList.toggle('hide',!(n>=8&&v===v.toLocaleUpperCase('vi')))}
+fT.addEventListener('input',()=>{if(/[\r\n]/.test(fT.value))fT.value=fT.value.replace(/\s*[\r\n]+\s*/g,' ');fitTitle();caseHint()});
+fT.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('#fDate').focus()}});
+$('#fCaseFix').onclick=()=>{const v=fT.value.trim().toLocaleLowerCase('vi');fT.value=v.charAt(0).toLocaleUpperCase('vi')+v.slice(1);fitTitle();caseHint();updatePreview();fT.focus()};
+addEventListener('resize',fitTitle);
+const fmtSize=n=>n<1048576?Math.max(1,Math.round(n/1024))+' KB':(n/1048576).toFixed(1).replace('.',',')+' MB';
+let thumbUrl=null;
+function updateFileZone(){
+  const f=$('#fFile').files&&$('#fFile').files[0],main=$('#dropMain'),sub=$('#dropSub'),th=$('#dropThumb'),z=$('#dropZone');
+  if(thumbUrl){URL.revokeObjectURL(thumbUrl);thumbUrl=null}
+  th.innerHTML='';
+  if(f){
+    z.classList.add('has');main.textContent=f.name;
+    sub.textContent=fmtSize(f.size)+(f.size>8*1048576?'. Quá lớn, tối đa 8 MB':'. Bấm để đổi file');
+    if(/^image\//.test(f.type)){thumbUrl=URL.createObjectURL(f);const im=document.createElement('img');im.src=thumbUrl;im.alt='';th.appendChild(im)}else th.textContent='PDF';
+    return;
+  }
+  const old=editId&&state.items.find(i=>i.id===editId);
+  if(old&&old.fileName){z.classList.add('has');main.textContent='Đã đính kèm: '+old.fileName;sub.textContent='Bấm để chọn file mới thay thế';th.textContent=/\.pdf$/i.test(old.fileName)?'PDF':'Ảnh'}
+  else{z.classList.remove('has');main.textContent='Chọn ảnh hoặc PDF chứng nhận';sub.textContent='Chụp trực tiếp hoặc chọn từ máy, tối đa 8 MB'}
+}
+$('#fFile').addEventListener('change',updateFileZone);
+function updatePreview(){
+  const mode=getMode(),raw=mode==='cert'?$('#fCredIn').value:$('#fAmt').value;
+  const credits=mode==='cert'?Number(raw):(Number($('#fAmt').value)||0)*(Number($('#fFac').value)||0);
+  const d=$('#fDateEnd').value||$('#fDate').value,c=cycle(),out=[];
+  out.push(raw!==''&&Number.isFinite(credits)?'<span><b class="pv-n">'+num(Math.round(credits*100)/100)+'</b> giờ tín chỉ</span>':'<span class="muted">Chưa có giờ tín chỉ</span>');
+  if(!d)out.push('<span class="muted">Chưa chọn ngày</span>');
+  else if(!c)out.push('<span class="muted">Chưa nhập chu kỳ 5 năm</span>');
+  else{const t=pd(d);out.push(t>=c.start&&t<=c.end?'<span class="ok">Tính vào chu kỳ hiện tại</span>':'<span class="warnc">Ngoài chu kỳ hiện tại, không cộng vào tổng</span>')}
+  $('#pv').innerHTML=out.join('');
+}
+$('#f').addEventListener('input',updatePreview);
+$('#f').addEventListener('change',updatePreview);
 
 /* XLSX-START */
 const CRCT=(()=>{const t=[];for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();

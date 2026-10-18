@@ -11,6 +11,7 @@ Công cụ web để lưu thông tin, chứng nhận CME và tự tính giờ t�
 - Tự cộng giờ tín chỉ trong chu kỳ, báo còn thiếu, số ngày còn lại, mức cần học mỗi tháng và phân bổ theo từng năm.
 - Đính kèm bản scan chứng nhận (PDF/ảnh, tối đa 8 MB mỗi file), xem ngay trong trang, kể cả trên điện thoại.
 - Biểu mẫu nhập chia 3 nhóm theo đúng giấy chứng nhận CME: **Hoạt động** (chủ đề, hình thức, đơn vị tổ chức, ngày), **Giờ tín chỉ** (ưu tiên số ghi trên chứng nhận, hoặc tự tính) và **Chứng nhận** (đơn vị cấp, số, số lưu sổ, ngày cấp, mã cơ sở, file scan).
+- Ô **Nội dung / chủ đề** lớn, tự giãn nhiều dòng; có nút đổi chữ in hoa toàn bộ sang chữ thường. **Hình thức** chọn bằng các nút bấm, không bị cắt chữ. Thanh dưới cùng luôn hiện số giờ tín chỉ sắp lưu và cho biết hoạt động có tính vào chu kỳ hiện tại không. Danh sách tự chuyển thành dạng thẻ trên điện thoại.
 - Xuất **Excel (.xlsx)** gồm 3 sheet: `Hoạt động` (đầy đủ danh sách, có bộ lọc, giờ tín chỉ là công thức, dòng tổng trong chu kỳ), `Tổng hợp` (hồ sơ, chu kỳ, giờ tích lũy, còn thiếu) và `Hệ số quy đổi`.
 - Xuất CSV, và xuất/nhập sao lưu JSON (kèm file scan) để chuyển sang thiết bị khác, có **chế độ gộp dữ liệu** để dùng cả máy tính lẫn điện thoại.
 - **Cài như ứng dụng và dùng khi mất mạng** (PWA): thêm vào màn hình chính điện thoại hoặc cài trên máy tính; sau lần mở đầu tiên có mạng, vẫn xem, nhập và xuất dữ liệu được khi ngoại tuyến.
