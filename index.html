@@ -160,6 +160,32 @@ button.pri.big{min-height:46px;padding:0 26px;font-size:16px;font-weight:600}
 tr.grp td{padding:14px 6px 6px;font-weight:700;font-size:13.5px;color:var(--pri);border-bottom:2px solid var(--bd)}
 tr.grp td span{font-weight:500;color:var(--mut)}
 @media(max-width:720px){tbody tr.grp{display:block;padding:10px 0 4px;border-bottom:0}}
+.ledger{display:flex;flex-direction:column;gap:10px}
+.yb{border:1px solid var(--bd);border-radius:12px;background:var(--field);overflow:hidden}
+.yb>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 14px;min-height:50px}
+.yb>summary::-webkit-details-marker,.it>summary::-webkit-details-marker{display:none}
+.yb>summary::before{content:"\25B8";color:var(--pri);font-size:16px;flex:none;transition:transform .15s}
+.yb[open]>summary::before{transform:rotate(90deg)}
+.yb[open]>summary{background:var(--pri-soft);border-bottom:1px solid var(--bd)}
+.yb-y{font-weight:700;font-size:17px}
+.yb-s{margin-left:auto;font-size:13px;color:var(--mut);text-align:right}
+.yb-s b{color:var(--tx)}
+.yb-list{display:flex;flex-direction:column}
+.it{border-bottom:1px solid var(--bd)}
+.it:last-child{border-bottom:0}
+.it>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:10px;align-items:center;padding:9px 14px;min-height:46px}
+.it>summary:hover,.it[open]>summary{background:var(--pri-soft)}
+.it-d{font-size:13px;color:var(--mut);font-variant-numeric:tabular-nums}
+.it-t{font-weight:600;line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow-wrap:anywhere}
+.it[open] .it-t{display:block;-webkit-line-clamp:unset}
+.it-c{font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums;text-align:right}
+.it-c small{font-weight:400;color:var(--mut);font-size:12px}
+.it.out>summary .it-t,.it.out>summary .it-c,.it.out>summary .it-d{opacity:.55}
+.it-body{padding:6px 14px 14px 80px;display:flex;flex-direction:column;gap:6px;font-size:13.5px;color:var(--mut);overflow-wrap:anywhere}
+.it-body .meta{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center}
+.it-body b{color:var(--tx)}
+.it-act{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+@media(max-width:600px){.it-body{padding-left:14px}.it>summary{grid-template-columns:46px minmax(0,1fr) auto;padding:9px 12px}.yb-s{font-size:12px}}
 .docs-card{border-top:3px solid var(--ok)}
 .docs-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px 14px;flex-wrap:wrap;margin-bottom:12px}
 .docs-head h2{margin:0 0 2px}
@@ -373,11 +399,8 @@ tr.grp td span{font-weight:500;color:var(--mut)}
       <div><label for="sType">Hình thức</label><select id="sType"></select></div>
       <div><label for="sStat">Tình trạng</label><select id="sStat"><option value="">Tất cả</option><option value="in">Trong chu kỳ hiện tại</option><option value="out">Ngoài chu kỳ</option><option value="file">Đã có bản scan</option><option value="nofile">Chưa có bản scan</option><option value="exp">Sắp hoặc đã hết hiệu lực</option></select></div>
     </div>
-    <div class="row lst-info"><span id="lstInfo" class="hint" style="margin:0"></span><button type="button" id="lfClear" class="linkbtn hide" style="margin:0">Xóa bộ lọc</button></div>
-    <div class="tbl"><table>
-      <thead><tr><th>Ngày</th><th>Nội dung / hình thức</th><th class="num">Giờ TC</th><th>Chứng nhận</th><th></th></tr></thead>
-      <tbody id="tb"></tbody>
-    </table></div>
+    <div class="row lst-info"><span id="lstInfo" class="hint" style="margin:0"></span><span class="row" style="gap:14px"><button type="button" id="lfToggle" class="linkbtn" style="margin:0">Mở hết các năm</button><button type="button" id="lfClear" class="linkbtn hide" style="margin:0">Xóa bộ lọc</button></span></div>
+    <div id="tb" class="ledger"></div>
   </div>
 
   <details class="card" id="typesCard">
@@ -543,7 +566,7 @@ function renderDash(){
    +'<div class="bar"><i style="width:'+pct+'%"></i></div>'+msg
    +'<div style="margin-top:14px"><label>Phân bổ theo năm (tham khảo mức đều ~'+num(req/5)+' giờ/năm)</label>'+yrs+'</div>'+skillNote();
 }
-let flt='all',sortBy='new',fYear='',fType='',fStat='';
+let flt='all',sortBy='new',fYear='',fType='',fStat='',openYears=null,openItems=new Set();
 const fold=s=>String(s==null?'':s).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D').toLowerCase();
 function renderTable(){
   const c=cycle();
@@ -578,7 +601,8 @@ function renderTable(){
   const active=!!(toks.length||fYear||fType||fStat||flt!=='all');
   $('#lfClear').classList.toggle('hide',!active);
   $('#lstInfo').textContent=nAll?('Hiển thị '+rows.length+' / '+nAll+' hoạt động · '+num(sum(rows))+' giờ tín chỉ'):'';
-  const rowHtml=i=>{
+  const sd=i=>{const d=pd(i.date);return d.getDate()+'/'+(d.getMonth()+1)};
+  const rowHtml=(i,withYear)=>{
     const none=i.mode==='none';
     const out=!none&&c&&!inCycle(i,c);
     const calc=!none&&(i.mode==='calc'||(!i.mode&&i.amount!=null&&i.factor!=null));
@@ -586,28 +610,46 @@ function renderTable(){
     const how=none?'không tính tín chỉ':calc?'tự tính: '+num(i.amount)+' × '+num(i.factor):'theo chứng nhận';
     const miss=i.fileId&&haveFiles&&!haveFiles.has(i.fileId);
     const wb=s=>esc(s).replace(/\//g,'/<wbr>');
-    const cert=[i.issuer?esc(i.issuer):'',i.certNo?'Số '+wb(i.certNo):'',i.regNo?'Lưu số '+wb(i.regNo):'',i.issueDate?'Cấp '+fmt(pd(i.issueDate)):''].filter(Boolean).join('<br>');
     const vs=none&&i.validUntil?vstat(i.validUntil):null;
     const hasH=i.hours!==''&&i.hours!=null&&Number.isFinite(Number(i.hours));
-    const meta='<span class="tag">'+esc(tn(i.typeId))+'</span>'+(i.org?'<span>'+esc(i.org)+'</span>':'')+(i.orgCode?'<span>Mã '+esc(i.orgCode)+'</span>':'')
+    const meta='<span class="tag">'+esc(tn(i.typeId))+'</span>'+(out?'<span class="tag">ngoài chu kỳ</span>':'')+(i.org?'<span>'+esc(i.org)+'</span>':'')+(i.orgCode?'<span>Mã '+esc(i.orgCode)+'</span>':'')
       +(none&&i.result?'<span class="tag">Kết quả: '+esc(i.result)+'</span>':'')+(none&&i.trainer?'<span>Hướng dẫn/đánh giá: '+esc(i.trainer)+'</span>':'')+(none&&hasH?'<span>'+num(Number(i.hours))+' giờ học</span>':'')
-      +(vs?'<span class="st st-'+vs.c+'">'+vs.t+'</span>':'')+(i.note?'<span>'+esc(i.note)+'</span>':'');
-    const fileBit=i.fileId?'<div style="margin-top:6px">'+(miss?'<span class="tag warn">thiếu file – bấm Sửa để đính kèm lại</span>':'<button class="sm" data-act="view" data-id="'+i.id+'">Xem file</button>')+'</div>':'';
-    return '<tr class="'+(out?'out ':'')+(none?'none':'')+'"><td class="c-date">'+when+(out?'<br><span class="tag">ngoài chu kỳ</span>':'')+'</td>'
-     +'<td class="c-main"><b>'+esc(i.title)+'</b><span class="meta">'+meta+'</span></td>'
-     +'<td class="c-cred num"><b>'+(none?'—':num(i.credits))+'</b><br><span class="hint">'+how+'</span></td>'
-     +'<td class="c-cert"><span class="hint">'+cert+'</span>'+fileBit+'</td>'
-     +'<td class="c-act num"><button class="sm" data-act="edit" data-id="'+i.id+'">Sửa</button> <button class="sm del" data-act="del" data-id="'+i.id+'">Xóa</button></td></tr>';
+      +(vs?'<span class="st st-'+vs.c+'">'+vs.t+'</span>':'');
+    const cert=[i.issuer?'Đơn vị cấp: '+esc(i.issuer):'',i.certNo?'Số chứng nhận: <b>'+wb(i.certNo)+'</b>':'',i.regNo?'Số lưu sổ: '+wb(i.regNo):'',i.issueDate?'Ngày cấp: '+fmt(pd(i.issueDate)):''].filter(Boolean).map(x=>'<span>'+x+'</span>').join('');
+    const fileBit=i.fileId?(miss?'<span class="tag warn">thiếu file, bấm Sửa để đính kèm lại</span>':'<button type="button" class="sm" data-act="view" data-id="'+i.id+'">Xem file</button>'):'';
+    const badge=vs&&vs.d<=90?' <span class="st st-'+vs.c+'" title="'+esc(vs.t)+'">!</span>':'';
+    const cr=none?'<span class="st st-na">kỹ năng</span>':num(i.credits)+' <small>giờ</small>';
+    return '<details class="it'+(out?' out':'')+(none?' none':'')+'" data-id="'+i.id+'"'+(openItems.has(i.id)?' open':'')+'><summary><span class="it-d">'+(withYear?sd(i):fmt(pd(i.date)))+'</span><span class="it-t">'+esc(i.title)+badge+'</span><span class="it-c">'+cr+'</span></summary>'
+      +'<div class="it-body"><span>'+when+' · '+how+'</span><div class="meta">'+meta+'</div>'+cert+(i.note?'<span>Ghi chú: '+esc(i.note)+'</span>':'')
+      +'<div class="it-act">'+fileBit+'<button type="button" class="sm" data-act="edit" data-id="'+i.id+'">Sửa</button><button type="button" class="sm del" data-act="del" data-id="'+i.id+'">Xóa</button></div></div></details>';
   };
   let html='';
+  const force=active;
+  if(openYears===null)openYears=new Set();
   if(sortBy==='new'||sortBy==='old'){
     let cur=null,grp=[];
-    const flush=()=>{if(grp.length)html+='<tr class="grp"><td colspan="5">Năm '+cur+' <span>· '+grp.length+' hoạt động · '+num(sum(grp))+' giờ tín chỉ</span></td></tr>'+grp.map(rowHtml).join('')};
+    const flush=()=>{if(grp.length)html+='<details class="yb" data-y="'+cur+'"'+(force||openYears.has(cur)?' open':'')+'><summary><span class="yb-y">Năm '+cur+'</span><span class="yb-s"><b>'+grp.length+'</b> hoạt động · <b>'+num(sum(grp))+'</b> giờ tín chỉ</span></summary><div class="yb-list">'+grp.map(i=>rowHtml(i,true)).join('')+'</div></details>'};
     for(const i of rows){const y=eff(i).slice(0,4);if(y!==cur){flush();cur=y;grp=[]}grp.push(i)}
     flush();
-  }else html=rows.map(rowHtml).join('');
-  $('#tb').innerHTML=rows.length?html:'<tr><td colspan="5" class="hint">'+(nAll?'Không có hoạt động nào khớp bộ lọc. Bấm “Xóa bộ lọc” để xem tất cả.':'Chưa có hoạt động nào.')+'</td></tr>';
+    $('#lfToggle').classList.remove('hide');
+    $('#lfToggle').textContent=years.length&&years.every(y=>openYears.has(y))?'Thu gọn các năm':'Mở hết các năm';
+  }else{
+    html=rows.length?'<div class="yb"><div class="yb-list">'+rows.map(i=>rowHtml(i,false)).join('')+'</div></div>':'';
+    $('#lfToggle').classList.add('hide');
+  }
+  $('#tb').innerHTML=rows.length?html:'<div class="hint">'+(nAll?'Không có hoạt động nào khớp bộ lọc. Bấm “Xóa bộ lọc” để xem tất cả.':'Chưa có hoạt động nào.')+'</div>';
 }
+$('#tb').addEventListener('click',e=>{
+  const sm=e.target.closest('summary');if(!sm)return;
+  const d=sm.parentElement,willOpen=!d.open;
+  if(d.dataset.y){willOpen?openYears.add(d.dataset.y):openYears.delete(d.dataset.y);
+    const ys=[...new Set(state.items.map(i=>eff(i).slice(0,4)))];$('#lfToggle').textContent=ys.every(y=>openYears.has(y))?'Thu gọn các năm':'Mở hết các năm'}
+  else if(d.dataset.id)willOpen?openItems.add(d.dataset.id):openItems.delete(d.dataset.id);
+});
+$('#lfToggle').onclick=()=>{
+  const ys=[...new Set(state.items.map(i=>eff(i).slice(0,4)))];
+  openYears=ys.every(y=>openYears.has(y))?new Set():new Set(ys);renderTable();
+};
 $('#fltBar').onclick=e=>{const b=e.target.closest('button');if(!b)return;flt=b.dataset.f;renderTable()};
 $('#sSort').onchange=e=>{sortBy=e.target.value;renderTable()};
 $('#sYear').onchange=e=>{fYear=e.target.value;renderTable()};
