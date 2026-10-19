@@ -1,7 +1,7 @@
 /* CME Tracker – service worker: dùng được khi mất mạng.
    © 2026 Bá Tử Kinh | Tường Vi. Bảo lưu mọi quyền.
    Khi sửa index.html, đổi số phiên bản CACHE bên dưới để máy người dùng làm mới bộ nhớ đệm. */
-const CACHE = 'cme-tracker-v8';
+const CACHE = 'cme-tracker-v9';
 const ASSETS = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'icon-maskable-512.png', 'apple-touch-icon.png'];
 
 self.addEventListener('install', e => {

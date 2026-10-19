@@ -401,6 +401,7 @@ tr.grp td span{font-weight:500;color:var(--mut)}
     </div>
     <div class="row lst-info"><span id="lstInfo" class="hint" style="margin:0"></span><span class="row" style="gap:14px"><button type="button" id="lfToggle" class="linkbtn" style="margin:0">Mở hết các năm</button><button type="button" id="lfClear" class="linkbtn hide" style="margin:0">Xóa bộ lọc</button></span></div>
     <div id="tb" class="ledger"></div>
+  <input id="qaFile" type="file" accept="application/pdf,image/*" class="sr" tabindex="-1" aria-hidden="true">
   </div>
 
   <details class="card" id="typesCard">
@@ -616,7 +617,8 @@ function renderTable(){
       +(none&&i.result?'<span class="tag">Kết quả: '+esc(i.result)+'</span>':'')+(none&&i.trainer?'<span>Hướng dẫn/đánh giá: '+esc(i.trainer)+'</span>':'')+(none&&hasH?'<span>'+num(Number(i.hours))+' giờ học</span>':'')
       +(vs?'<span class="st st-'+vs.c+'">'+vs.t+'</span>':'');
     const cert=[i.issuer?'Đơn vị cấp: '+esc(i.issuer):'',i.certNo?'Số chứng nhận: <b>'+wb(i.certNo)+'</b>':'',i.regNo?'Số lưu sổ: '+wb(i.regNo):'',i.issueDate?'Ngày cấp: '+fmt(pd(i.issueDate)):''].filter(Boolean).map(x=>'<span>'+x+'</span>').join('');
-    const fileBit=i.fileId?(miss?'<span class="tag warn">thiếu file, bấm Sửa để đính kèm lại</span>':'<button type="button" class="sm" data-act="view" data-id="'+i.id+'">Xem file</button>'):'';
+    const attachBtn='<button type="button" class="sm" data-act="attach" data-id="'+i.id+'">Đính kèm file</button>';
+    const fileBit=i.fileId?(miss?'<span class="tag warn">thiếu file</span>'+attachBtn:'<button type="button" class="sm" data-act="view" data-id="'+i.id+'">Xem file</button>'):'<span class="tag">Chưa có bản scan</span>'+attachBtn;
     const badge=vs&&vs.d<=90?' <span class="st st-'+vs.c+'" title="'+esc(vs.t)+'">!</span>':'';
     const cr=none?'<span class="st st-na">kỹ năng</span>':num(i.credits)+' <small>giờ</small>';
     return '<details class="it'+(out?' out':'')+(none?' none':'')+'" data-id="'+i.id+'"'+(openItems.has(i.id)?' open':'')+'><summary><span class="it-d">'+(withYear?sd(i):fmt(pd(i.date)))+'</span><span class="it-t">'+esc(i.title)+badge+'</span><span class="it-c">'+cr+'</span></summary>'
@@ -747,6 +749,8 @@ $('#tb').onclick=async e=>{
     syncChips();fitTitle();caseHint();updateFileZone();updatePreview();$('#addForm').scrollIntoView({behavior:'smooth'});
   }else if(b.dataset.act==='view'){
     openViewer(it);
+  }else if(b.dataset.act==='attach'){
+    pickAttach('item',it.id);
   }
 };
 $('#q').oninput=e=>{q=e.target.value;renderTable()};
@@ -1069,6 +1073,22 @@ $('#vClose').onclick=closeViewer;
 $('#viewer').addEventListener('click',e=>{if(e.target.id==='viewer')closeViewer()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeViewer();closeDoc()}});
 
+/* ---------- Đính kèm nhanh bản scan từ danh sách / thẻ hồ sơ ---------- */
+let attachTarget=null;
+function pickAttach(kind,id){attachTarget={kind,id};const f=$('#qaFile');f.value='';f.click()}
+$('#qaFile').onchange=async e=>{
+  const file=e.target.files[0];if(!file||!attachTarget)return;
+  const {kind,id}=attachTarget;attachTarget=null;
+  if(file.size>8*1048576){alert('File quá lớn (tối đa 8 MB).');return}
+  const it=(kind==='doc'?state.docs:state.items).find(x=>x.id===id);if(!it)return;
+  const newId=uid();
+  try{await fput({id:newId,name:file.name||'ban-scan',type:file.type,buf:await readBuf(file)})}
+  catch(err){alert('Không lưu được file đính kèm: '+(err&&err.message||err)+'\nHãy thử lại hoặc chọn file nhỏ hơn.');return}
+  const old=it.fileId;it.fileId=newId;it.fileName=file.name||'ban-scan';it.updatedAt=Date.now();
+  if(old)try{await fdel(old)}catch(_){}
+  save();renderBk();await refreshFiles();
+  alert('Đã đính kèm bản scan cho: '+it.title);
+};
 /* ---------- Hồ sơ quan trọng (chứng chỉ hành nghề, bằng cấp…) ---------- */
 const DOC_KINDS=[
   {id:'license',name:'Chứng chỉ hành nghề',ph:'VD: Chứng chỉ hành nghề, giấy phép hành nghề'},
@@ -1099,7 +1119,8 @@ function renderDocs(){
     const miss=d.fileId&&haveFiles&&!haveFiles.has(d.fileId);
     const rows=[d.number?'<span>Số: <b>'+wb(d.number)+'</b></span>':'',d.issuer?'<span>Nơi cấp: '+esc(d.issuer)+'</span>':'',d.issueDate?'<span>Ngày cấp: '+fmt(pd(d.issueDate))+'</span>':'',d.note?'<span>'+esc(d.note)+'</span>':''].join('');
     const st=vs?'<span class="st st-'+vs.c+'">'+vs.t+'</span>':'<span class="st st-na">Không ghi thời hạn</span>';
-    const view=!d.fileId?'<span class="tag">chưa đính kèm</span>':miss?'<span class="tag warn">thiếu file, bấm Sửa để đính kèm lại</span>':'<button type="button" class="pri" data-act="view" data-id="'+d.id+'">Xem bản scan</button>';
+    const ab='<button type="button" class="'+(d.fileId?'sm':'pri')+'" data-act="attach" data-id="'+d.id+'">Đính kèm file</button>';
+    const view=!d.fileId?ab:miss?'<span class="tag warn">thiếu file</span>'+ab:'<button type="button" class="pri" data-act="view" data-id="'+d.id+'">Xem bản scan</button>';
     return '<div class="doc k-'+esc(d.kind)+'"><div class="doc-k">'+esc(dk(d.kind).name)+'</div><div class="doc-t">'+esc(d.title)+'</div><div class="doc-m">'+rows+'</div>'+st
       +'<div class="doc-act">'+view+'<button type="button" class="sm" data-act="edit" data-id="'+d.id+'">Sửa</button><button type="button" class="sm del" data-act="del" data-id="'+d.id+'">Xóa</button></div></div>';
   }).join('');
@@ -1160,6 +1181,7 @@ $('#docsList').onclick=async e=>{
   const b=e.target.closest('button[data-act]');if(!b)return;
   const d=state.docs.find(x=>x.id===b.dataset.id);if(!d)return;
   if(b.dataset.act==='view')openViewer(d);
+  else if(b.dataset.act==='attach')pickAttach('doc',d.id);
   else if(b.dataset.act==='edit')openDoc(d);
   else if(b.dataset.act==='del'){
     if(!confirm('Xóa hồ sơ "'+d.title+'" và bản scan đính kèm?'))return;
